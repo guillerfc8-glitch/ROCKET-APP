@@ -1,0 +1,798 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b11">
+<title>ROCKET APP | Controller Finder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--bg:#090b11;--panel:#121925;--panel2:#192333;--line:#293649;--red:#f43b4d;--muted:#98a6ba;--white:#f5f7fb;--green:#63dda0;--gold:#ffca73}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:radial-gradient(ellipse at 50% -20%,#35202c,transparent 48%),var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif;min-height:100vh}
+button,input,select{font:inherit}
+header{height:76px;position:sticky;top:0;z-index:20;background:#090b10ed;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff14;display:flex;align-items:center;justify-content:space-between;padding:0 max(4%,calc((100% - 1250px)/2))}
+.logo{font-size:20px;font-weight:1000;letter-spacing:2px}.logo span{color:var(--red)}
+.logo small{font-size:9px;color:#8996a9;letter-spacing:1px}
+.nav{display:flex;gap:5px}
+.nav button{background:transparent;color:#aab6c7;border:1px solid transparent;border-radius:8px;padding:11px 13px;font-size:10px;font-weight:900;cursor:pointer}
+.nav button.active,.nav button:hover{background:#f43b4d19;color:white;border-color:#f43b4d55}
+.wrap{width:min(1250px,93%);margin:auto}
+.page{display:none;animation:appear .2s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{text-align:center;padding:72px 0 48px}
+.eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--red);font-weight:900}
+h1{font:900 clamp(58px,10vw,112px)/.85 'Barlow Condensed';margin:20px 0;letter-spacing:1px}
+h1 span{color:var(--red)}
+.hero p{max-width:670px;margin:20px auto;color:var(--muted);font-size:13px;line-height:1.9}
+.pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:23px}
+.pill{border:1px solid var(--line);border-radius:30px;padding:8px 12px;font-size:9px;color:#d5dce6;background:#ffffff06}
+.btn{border:0;border-radius:8px;padding:13px 17px;font-size:10px;font-weight:900;letter-spacing:.6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.primary{background:var(--red);color:white}.primary:hover{background:#d92b3c}
+.secondary{background:#273244;color:white}.secondary:hover{background:#39465b}
+.outline{background:transparent;border:1px solid var(--line);color:white}
+.hero-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:26px}
+.section{padding:35px 0 55px}
+.heading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:22px}
+.heading h2{font:800 43px 'Barlow Condensed';margin:6px 0 0}
+.heading p{font-size:11px;color:var(--muted);line-height:1.7;max-width:460px}
+.featured{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;background:linear-gradient(115deg,#321820,#141a25 72%);border:1px solid #853b48;border-radius:17px;padding:23px;overflow:hidden}
+.featured-photo{height:285px;background:radial-gradient(circle,#303b4b,#10151f 70%);border-radius:12px;display:grid;place-items:center;overflow:hidden}
+.featured-photo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.featured h2{font:900 48px/.98 'Barlow Condensed';margin:13px 0}
+.featured p{font-size:12px;line-height:1.8;color:#c1cbd8}
+.favorite{display:inline-block;background:#f43b4d22;border:1px solid #f43b4d77;color:#ff9ba4;padding:8px 11px;border-radius:6px;font-size:9px;font-weight:900;letter-spacing:1px}
+.stats{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}
+.stat{background:#ffffff09;border:1px solid var(--line);padding:9px 10px;border-radius:6px;font-size:9px;color:#dce3ed}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:linear-gradient(145deg,#161f2c,#0e131d);border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:.2s}
+.card:hover{transform:translateY(-3px);border-color:#9b4550}
+.card-img{height:185px;background:radial-gradient(circle,#293547,#10151e 72%);display:grid;place-items:center;padding:12px;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.fallback{width:100%;height:100%;min-height:110px;display:grid;place-content:center;justify-items:center;gap:8px;color:#aeb9c9;text-align:center;background:radial-gradient(circle,#273448 0%,#111925 72%);border-radius:8px}
+.fallback span{font-size:48px;line-height:1}
+.fallback small{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#93a2b7}
+.featured-fallback{width:100%;height:100%;border-radius:12px}
+.featured-fallback span{font-size:64px}
+.product-photo{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;display:block}.keyboard-photo{padding:7px;box-sizing:border-box;object-fit:contain;object-position:center}
+.card-img,.compare-img,.result-photo,.featured-photo{overflow:hidden;min-width:0}
+.compare-img .fallback,.result-photo .fallback{min-height:100%}
+.card-body{padding:15px}
+.brand{font-size:9px;color:var(--red);font-weight:900;letter-spacing:1.5px}
+.card h3{font-size:14px;margin:8px 0}
+.card p{font-size:10px;color:var(--muted);line-height:1.7;min-height:51px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0}
+.tags span{font-size:9px;color:#cbd5e1;border:1px solid var(--line);border-radius:5px;padding:6px}
+.card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.card-actions button{font-size:9px;padding:9px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.search,.filter{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:white;padding:12px;font-size:11px;outline:none}
+.search{flex:1;min-width:190px}
+.filter{min-width:140px}
+.counter{font-size:10px;color:var(--muted);margin:12px 0 17px}
+.compare-layout{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.compare-box{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px}
+.compare-box h3{font-size:13px}
+.compare-box select{width:100%;margin:10px 0}
+.compare-img{height:150px;background:#0b1018;border-radius:9px;display:grid;place-items:center;padding:8px;overflow:hidden}
+.compare-img img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;display:block}
+.compare-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:10px}
+.compare-row span{color:var(--muted);text-align:right}
+.panel{background:linear-gradient(145deg,#161f2c,#10151e);border:1px solid var(--line);border-radius:14px;padding:24px}
+.quiz-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:15px}
+.progress-head{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-weight:800;margin-bottom:12px}
+.progress{height:5px;background:#2b3545;border-radius:10px;overflow:hidden}
+.progress div{height:100%;background:linear-gradient(90deg,var(--red),#ff9669);width:0;transition:.2s}
+.step{font-size:10px;color:var(--red);font-weight:900;letter-spacing:2px;margin:25px 0 10px}
+.question{font-size:clamp(23px,4vw,32px);margin:0 0 8px}
+.desc{font-size:11px;line-height:1.7;color:var(--muted);margin-bottom:20px}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.option{min-height:75px;border:1px solid var(--line);border-radius:9px;background:#0b1018;color:white;text-align:left;padding:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.option.selected,.option:hover{border-color:var(--red);background:#f43b4d19}
+.option .ico{font-size:20px}
+.option strong{font-size:11px;display:block;margin:3px 0 5px}
+.option small{font-size:9px;line-height:1.5;color:var(--muted);display:block}
+.actions{display:flex;gap:9px;margin-top:23px}
+.actions button{flex:1}
+.side-row{display:flex;gap:10px;margin:14px 0}
+.side-icon{width:27px;height:27px;background:#f43b4d1c;color:var(--red);border-radius:7px;display:grid;place-items:center;font-size:10px}
+.side-row strong{font-size:10px;display:block}
+.side-row small{font-size:9px;line-height:1.5;color:var(--muted);display:block;margin-top:4px}
+.results{display:none;margin-top:20px}
+.result-banner{background:linear-gradient(110deg,#321820,#151b26);border:1px solid #843b47;border-radius:13px;padding:22px;margin-bottom:15px}
+.result-banner h2{font:800 42px 'Barlow Condensed';margin:8px 0}
+.result-banner p{font-size:11px;color:#c4cedb;line-height:1.7}
+.result-main{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+.result-card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:17px;margin-bottom:10px}
+.result-card.best{border-color:#8c3d49}
+.result-card h3{font-size:17px}
+.result-photo{height:200px;background:#0b1018;border-radius:9px;display:grid;place-items:center;padding:8px;overflow:hidden}
+.result-photo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}.keyboard-result-art img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+/* En los resultados del test se muestra la imagen completa del teclado, sin recortar ni desplazar. Solo afecta a las recomendaciones, no al catálogo. */
+.keyboard-result-art img.keyboard-photo{object-fit:contain!important;object-position:center center!important;padding:0!important;box-sizing:border-box;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;}.keyboard-result-art .kb-illustration{width:100%;height:100%;min-height:180px}.keyboard-result-art .kb-illustration svg{max-height:190px;width:100%;height:100%}
+.score{font-size:33px;font-weight:900;color:var(--green);margin:10px 0}
+.meter{height:6px;background:#293445;border-radius:10px;overflow:hidden}.meter div{height:100%;background:var(--green)}
+.reason{font-size:10px;color:#c3ceda;line-height:1.8}
+.result-card a{font-size:10px;color:#ff8993;font-weight:900;text-decoration:none}
+.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.guide{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.guide .number{font:900 34px 'Barlow Condensed';color:var(--red)}
+.guide h3{font-size:13px}.guide p{font-size:10px;color:var(--muted);line-height:1.8}
+.note{font-size:10px;line-height:1.7;color:var(--muted);border-top:1px solid var(--line);padding-top:13px;margin-top:17px}
+footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77859a;font-size:9px;line-height:1.8;margin-top:35px}
+@media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.featured{grid-template-columns:1fr}.quiz-layout{grid-template-columns:1fr}.side{display:none}.result-main{grid-template-columns:1fr}}
+@media(max-width:570px){header{height:auto;display:block;padding:12px 3%}.logo{text-align:center;margin-bottom:10px}.nav{justify-content:center;gap:1px}.nav button{font-size:8px;padding:9px 7px}.cards,.guide-grid,.compare-layout{grid-template-columns:1fr}.options{grid-template-columns:1fr}.heading{display:block}.heading p{margin-top:8px}.hero{padding:52px 0 30px}.featured h2{font-size:40px}}
+@media print{header,footer,.nav,.actions,.result-actions{display:none!important}.page{display:none!important}#test.page{display:block!important}body{background:white;color:#111}}
+.card-img{height:205px;display:grid;place-items:center;padding:12px;overflow:hidden;background:#0b1018}.card-img img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}.product-photo{max-width:100%;max-height:100%;}
+
+.controller-illustration{min-height:150px}.controller-illustration svg{width:94%;height:115px;max-width:360px}.kb-illustration{width:100%;height:100%;display:grid;place-items:center;background:radial-gradient(circle,#273547,#0b1018 75%);border-radius:8px;overflow:hidden}
+.image-fallback{width:100%;height:100%;min-height:150px;display:grid;place-items:center}.image-fallback[hidden]{display:none!important}.image-fallback .kb-illustration{min-height:150px;width:100%;height:100%;display:grid;place-items:center}.kb-illustration svg{width:100%;height:100%;max-height:180px;display:block}
+.kb-illustration svg{width:94%;height:90%;max-height:170px;display:block}
+.kb-chip{display:inline-block;border:1px solid #40516a;padding:5px 7px;border-radius:5px;font-size:9px;color:#d7e0ec}
+#keyboards .card p{min-height:55px}
+@media(max-width:570px){.nav{flex-wrap:wrap}.nav button{font-size:7px;padding:8px 6px}}
+
+#mouseCards .card p{min-height:58px}
+.mouse-art{width:100%;height:100%;min-height:150px;display:grid;place-items:center;background:radial-gradient(circle,#273547,#0b1018 75%);border-radius:8px;overflow:hidden}
+.mouse-art svg{width:90%;height:155px;max-width:300px;display:block}
+.mouse-art small{font-size:8px;letter-spacing:1.2px;color:#aebbd0;text-transform:uppercase;margin-top:-8px}
+#mouseCards .card-img{background:#0b1018}
+
+
+.mouse-photo-wrap{width:100%;height:100%;min-height:155px;display:grid;place-items:center;background:radial-gradient(circle,#273547,#0b1018 75%);border-radius:8px;overflow:hidden}
+.mouse-product-photo{width:100%;height:100%;min-height:155px;max-height:190px;object-fit:contain;object-position:center;display:block;padding:8px;box-sizing:border-box}
+.mouse-photo-wrap [hidden]{display:none!important}
+.mouse-compare-img .mouse-photo-wrap{width:100%;height:100%;min-height:0;background:transparent;border-radius:0}
+.mouse-compare-img .mouse-product-photo{height:130px;min-height:0;max-height:130px;padding:6px}
+.mouse-compare-img .mouse-art{min-height:125px;background:transparent}
+.mouse-compare-img .mouse-art svg{height:115px}
+.combo-result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.combo-result-grid section{min-width:0;border:1px solid #263447;border-radius:12px;padding:12px;background:#0d1420}
+.combo-result-grid .result-photo{height:190px;min-height:190px;display:grid;place-items:center;overflow:hidden;border-radius:8px;background:#0b1018}
+.combo-result-grid .result-photo .mouse-photo-wrap{height:190px;min-height:190px}
+.combo-result-grid .result-photo .mouse-product-photo{height:190px;min-height:190px}
+@media(max-width:700px){.combo-result-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">ROCKET <span>APP</span> <small>CONTROLLER LAB</small></div>
+ <nav class="nav">
+  <button class="active" data-page="home">INICIO</button>
+  <button data-page="catalog">MANDOS</button>
+   <button data-page="keyboards">TECLADOS</button>
+  <button data-page="mice">RATONES</button>
+  <button data-page="compare">COMPARAR</button>
+  <button data-page="test">TEST</button>
+  <button data-page="guide">GUÍA</button>
+ </nav>
+</header>
+
+<main class="wrap">
+
+<!-- INICIO -->
+<section class="page active" id="home">
+ <div class="hero">
+  <div class="eyebrow">THE ULTIMATE CONTROLLER DATABASE</div>
+  <h1>CHOOSE YOUR<br><span>PERFECT PAD.</span></h1>
+  <p>Explora mandos, teclados y 21 ratones seleccionados para jugar de forma casual o competitiva.</p>
+  <div class="pills">
+   <span class="pill">🎯 AIM</span><span class="pill">⚡ MECHANICS</span><span class="pill">🧠 GAME SENSE</span><span class="pill">🏆 COMPETITIVE</span>
+  </div>
+  <div class="hero-actions">
+   <button class="btn primary" onclick="go('test')">EMPEZAR TEST →</button>
+   <button class="btn secondary" onclick="go('catalog')">EXPLORAR CATÁLOGO</button>
+  </div>
+ </div>
+
+ <div class="eyebrow">YOUR FAVOURITE CONTROLLER</div>
+ <div class="featured" style="margin-top:12px">
+  <div class="featured-photo">
+   <img src="https://www.notebookcheck.com/fileadmin/Notebooks/News/_nc5/gameSir-G7-Pro-8K-PC-Controller-White-and-Black.jpg" alt="GameSir G7 Pro 8K Black" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+   <div class="fallback featured-fallback" hidden><span>🎮</span><small>GameSir G7 Pro 8K Black</small></div>
+  </div>
+  <div>
+   <span class="favorite">FAVORITO DE ROCKET APP · 100%</span>
+   <h2>GAMESIR G7 PRO<br>8K BLACK</h2>
+   <p>El mando favorito de Rocket App. Una edición enfocada a PC con sticks TMR de segunda generación, cuatro controles macro reasignables y una tasa de sondeo anunciada de hasta 8.000 Hz.</p>
+   <div class="stats"><span class="stat">8K Hz anunciado</span><span class="stat">TMR Gen 2</span><span class="stat">4 macros</span><span class="stat">PC</span></div>
+   <button class="btn primary" onclick="showProduct('g78k')">VER FICHA →</button>
+  </div>
+ </div>
+
+ <div class="section">
+  <div class="heading"><div><div class="eyebrow">ROCKET APP</div><h2>ELIGE TU EXPERIENCIA</h2></div></div>
+  <div class="guide-grid">
+   <article class="guide"><div class="number">01</div><h3>Catálogo completo</h3><p>Explora mandos básicos, económicos, calidad-precio y prémium.</p><button class="btn secondary" onclick="go('catalog')">ENTRAR →</button></article>
+   <article class="guide"><div class="number">02</div><h3>Catálogo de teclados</h3><p>Explora formatos compactos, TKL y completos, con opciones magnéticas y mecánicas.</p><button class="btn secondary" onclick="go('keyboards')">VER TECLADOS →</button></article>
+    <article class="guide"><div class="number">03</div><h3>Comparador</h3><p>Compara dos dispositivos del mismo tipo y descubre sus diferencias.</p><button class="btn secondary" onclick="go('compare')">COMPARAR →</button></article>
+   <article class="guide"><div class="number">04</div><h3>Recomendador</h3><p>Encuentra un mando según tu estilo y tus preferencias.</p><button class="btn primary" onclick="go('test')">HACER TEST →</button></article>
+  </div>
+ </div>
+</section>
+
+<!-- CATÁLOGO -->
+<section class="page" id="catalog">
+ <div class="section">
+  <div class="heading">
+   <div><div class="eyebrow">ALL BRANDS · ALL BUDGETS</div><h2>CATÁLOGO DE MANDOS</h2></div>
+   <p>30 modelos seleccionados para PC, Xbox, PlayStation y Switch. Compara sus sensores, botones, gatillos y controles extra.</p>
+  </div>
+  <div class="tools">
+   <input class="search" id="search" placeholder="Buscar mando, modelo o marca...">
+   <select class="filter" id="brand">
+    <option value="all">Todas las marcas</option>
+    <option>GameSir</option><option>Razer</option><option>Xbox</option><option>Sony</option>
+    <option>8BitDo</option><option>Flydigi</option><option>Victrix</option><option>SCUF</option>
+    <option>Turtle Beach</option><option>ASUS</option><option>Nacon</option><option>PowerA</option><option>GuliKit</option>
+   </select>
+   <select class="filter" id="platform">
+    <option value="all">Todas las plataformas</option><option>PC</option><option>Xbox</option><option>PS5</option><option>PS4</option><option>Switch</option>
+   </select>
+   <select class="filter" id="range">
+    <option value="all">Todas las gamas</option><option value="basic">Básicos</option><option value="budget">Económicos</option><option value="value">Calidad-precio</option><option value="premium">Prémium</option>
+   </select>
+   <select class="filter" id="feature">
+    <option value="all">Todas las funciones</option><option value="back">Botones traseros</option><option value="hall">Hall Effect</option><option value="tmr">TMR</option><option value="mechanical">Mecánicos</option><option value="wireless">Inalámbricos</option>
+   </select>
+  </div>
+  <div class="counter" id="counter"></div>
+  <div class="cards" id="catalogCards"></div>
+ </div>
+</section>
+
+<!-- CATÁLOGO DE TECLADOS -->
+<section class="page" id="keyboards">
+ <div class="section">
+  <div class="heading">
+   <div><div class="eyebrow">KEYBOARD DATABASE · COMPETITIVE</div><h2>CATÁLOGO DE TECLADOS</h2></div>
+   <p>Explora 30 teclados para jugar y escribir. Filtra por marca, tamaño y tipo de switch.</p>
+  </div>
+  <div class="tools">
+   <input class="search" id="kSearch" placeholder="Buscar teclado, modelo o marca...">
+   <select class="filter" id="kBrand">
+    <option value="all">Todas las marcas</option>
+    <option>Wooting</option><option>Razer</option><option>SteelSeries</option><option>Logitech</option><option>Keychron</option><option>DrunkDeer</option><option>ASUS</option><option>Corsair</option><option>HyperX</option><option>Akko</option><option>MonsGeek</option><option>Ducky</option><option>Glorious</option><option>Mountain</option><option>Endgame Gear</option><option>ATK</option>
+   </select>
+   <select class="filter" id="kSize">
+    <option value="all">Todos los tamaños</option><option>60%</option><option>65%</option><option>75%</option><option>TKL (80%)</option><option>100%</option>
+   </select>
+   <select class="filter" id="kSwitch">
+    <option value="all">Todos los switches</option><option>Magnético (Hall Effect)</option><option>Mecánico</option><option>Óptico</option>
+   </select>
+  </div>
+  <div class="counter" id="kCounter"></div>
+  <div class="cards" id="keyboardCards"></div>
+ </div>
+</section>
+
+
+<!-- CATÁLOGO DE RATONES -->
+<section class="page" id="mice">
+ <div class="section">
+  <div class="heading">
+   <div><div class="eyebrow">MOUSE DATABASE · ESPORTS</div><h2>CATÁLOGO DE RATONES</h2></div>
+   <p>21 ratones elegidos por su poco peso, sensor, forma y rendimiento para competitivo. La forma importa tanto como los gramos: elige uno que encaje con tu mano y agarre.</p>
+  </div>
+  <div class="tools">
+   <input class="search" id="mSearch" placeholder="Buscar ratón, modelo o marca...">
+   <select class="filter" id="mBrand">
+    <option value="all">Todas las marcas</option>
+    <option>Logitech</option><option>Attack Shark</option><option>Razer</option><option>Pulsar</option><option>Lamzu</option><option>Endgame Gear</option><option>HyperX</option><option>ATK</option><option>VXE</option><option>MCHOSE</option><option>Ajazz</option><option>Scyrox</option><option>Ninjutso</option><option>Zowie</option>
+   </select>
+   <select class="filter" id="mWeight">
+    <option value="all">Cualquier peso</option><option value="ultra">Menos de 50 g</option><option value="light">50–60 g</option><option value="plus">Más de 60 g</option>
+   </select>
+   <select class="filter" id="mConnection">
+    <option value="all">Cualquier conexión</option><option value="Inalámbrico">Inalámbricos</option><option value="Cable">Con cable</option>
+   </select>
+  </div>
+  <div class="counter" id="mCounter"></div>
+  <div class="cards" id="mouseCards"></div>
+  <p class="note" style="margin-top:18px">Pesos orientativos: pueden variar según la versión, el tamaño o la edición. Los precios también cambian según la tienda y las ofertas.</p>
+ </div>
+</section>
+
+<!-- COMPARADOR -->
+<section class="page" id="compare">
+ <div class="section">
+  <div class="heading"><div><div class="eyebrow">HEAD TO HEAD</div><h2 id="compareTitle">COMPARADOR DE MANDOS</h2></div><p>Escoge el tipo de producto y compara dos modelos.</p></div>
+  <div class="tools"><select class="filter" id="compareType"><option value="pad">Comparar mandos</option><option value="keyboard">Comparar teclados</option><option value="mouse">Comparar ratones</option></select></div>
+  <div class="compare-layout">
+   <div class="compare-box"><h3 id="compareLabelA">MANDO A</h3><select class="filter" id="compareA"></select><div id="detailA"></div></div>
+   <div class="compare-box"><h3 id="compareLabelB">MANDO B</h3><select class="filter" id="compareB"></select><div id="detailB"></div></div>
+  </div>
+ </div>
+</section>
+
+<!-- TEST -->
+<section class="page" id="test">
+ <div class="section">
+  <div class="heading"><div><div class="eyebrow">PERSONAL CONTROLLER MATCH</div><h2>ENCUENTRA TU EQUIPO</h2></div><p>Elige mando o teclado y ratón. Si eliges el pack, recibirás dos recomendaciones compatibles con tus preferencias.</p></div>
+  <div class="quiz-layout" id="quizArea">
+   <div class="panel">
+    <div class="progress-head"><span id="stepCount">PREGUNTA 1 DE 8</span><span id="percent">13%</span></div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div id="questionArea"></div>
+    <div class="actions"><button class="btn secondary" id="back" disabled>← ATRÁS</button><button class="btn primary" id="next" disabled>CONTINUAR →</button></div>
+   </div>
+   <aside class="panel side">
+    <div class="eyebrow">ANÁLISIS PERSONALIZADO</div><h3>QUÉ VALORAMOS</h3>
+    <div class="side-row"><div class="side-icon">01</div><div><strong>Tu equipo</strong><small>Mando o pack de teclado y ratón.</small></div></div>
+    <div class="side-row"><div class="side-icon">02</div><div><strong>Tu estilo de juego</strong><small>Uso competitivo, mixto o casual.</small></div></div>
+    <div class="side-row"><div class="side-icon">03</div><div><strong>Tus preferencias</strong><small>Formato, switches, peso y forma.</small></div></div>
+    <div class="side-row"><div class="side-icon">04</div><div><strong>Tu presupuesto</strong><small>Una recomendación acorde a tu gama.</small></div></div>
+    <div class="note">La puntuación indica coincidencia con tus respuestas, no una garantía de mejor puntería o resultados.</div>
+   </aside>
+  </div>
+  <div class="results" id="results">
+   <div class="result-banner"><div class="eyebrow">ANÁLISIS COMPLETADO</div><h2>TU RESULTADO</h2><p id="resultIntro"></p></div>
+   <div class="result-main"><div id="bestResult"></div><div><div class="eyebrow" style="margin:5px 0 12px">OTRAS OPCIONES</div><div id="alternatives"></div></div></div>
+   <div class="actions"><button class="btn primary" onclick="restart()">REPETIR TEST ↻</button><button class="btn secondary" onclick="window.print()">GUARDAR / IMPRIMIR</button></div>
+  </div>
+ </div>
+</section>
+
+<!-- GUÍA -->
+<section class="page" id="guide">
+ <div class="section">
+  <div class="heading"><div><div class="eyebrow">CONTROLLER KNOWLEDGE</div><h2>GUÍA DE COMPRA</h2></div><p>Aprende qué significan las características de los mandos y también qué tipo de switches monta cada teclado del catálogo.</p></div>
+  <div class="guide-grid">
+   <article class="guide"><div class="number">01</div><h3>Sticks Hall Effect</h3><p>Utilizan sensores magnéticos para leer el movimiento. Reducen el desgaste por contacto que puede provocar drift, aunque no son inmunes a todos los fallos.</p></article>
+   <article class="guide"><div class="number">02</div><h3>Sticks TMR</h3><p>Otra tecnología de lectura magnética. Algunos mandos actuales utilizan TMR para ofrecer una lectura precisa y reducir el desgaste por contacto.</p></article>
+   <article class="guide"><div class="number">03</div><h3>Botones mecánicos</h3><p>Suelen ofrecer una pulsación más marcada y definida. El tacto y el sonido dependen del diseño de cada fabricante.</p></article>
+   <article class="guide"><div class="number">04</div><h3>Sensores de sticks</h3><p>Hall Effect y TMR usan sensores magnéticos; los potenciómetros usan contacto eléctrico. La tecnología no garantiza por sí sola mejor puntería.</p></article>
+   <article class="guide"><div class="number">05</div><h3>Palancas traseras</h3><p>Permiten asignar acciones sin retirar los pulgares de los sticks. Importa tanto su cantidad como su posición y comodidad.</p></article>
+   <article class="guide"><div class="number">05</div><h3>Polling rate</h3><p>Es la frecuencia con la que el mando comunica sus entradas. Una cifra más alta no garantiza por sí sola una mejora visible en todas las partidas.</p></article>
+   <article class="guide"><div class="number">06</div><h3>Gatillos</h3><p>Los analógicos permiten controlar el recorrido. Los topes y microinterruptores pueden ofrecer una pulsación más corta.</p></article>
+   <article class="guide"><div class="number">07</div><h3>Con cable o inalámbrico</h3><p>Un mando con cable evita tener que cargar batería. Los inalámbricos pueden ofrecer Bluetooth o conexión de 2,4 GHz mediante receptor.</p></article>
+   <article class="guide"><div class="number">08</div><h3>Compatibilidad</h3><p>Un mando que funciona en PC no necesariamente funciona en Xbox o PlayStation. Comprueba siempre la plataforma exacta.</p></article>
+   <article class="guide"><div class="number">09</div><h3>Ergonomía</h3><p>El peso, la forma, el tamaño y la posición de los botones influyen en la comodidad. Si puedes, prueba el mando antes de comprarlo.</p></article>
+  </div>
+  <div class="heading" style="margin-top:34px"><div><div class="eyebrow">KEYBOARD KNOWLEDGE</div><h2>GUÍA DE SWITCHES</h2></div><p>Qué tecnología utiliza cada teclado del catálogo y qué significa en la práctica.</p></div>
+  <div class="guide-grid">
+   <article class="guide"><div class="number">01</div><h3>Switch magnético (Hall Effect)</h3><p>Detecta la posición de la tecla mediante un sensor magnético, sin el contacto eléctrico típico de un switch mecánico. En los modelos compatibles permite ajustar el punto de actuación y usar Rapid Trigger, que puede volver a activar la tecla en cuanto empieza a subir.</p></article>
+   <article class="guide"><div class="number">02</div><h3>Switch óptico</h3><p>Registra la pulsación mediante un sistema de luz. Puede ofrecer una respuesta rápida y un funcionamiento distinto al de los contactos mecánicos tradicionales. No todos los switches ópticos son iguales ni todos permiten ajustar la actuación.</p></article>
+   <article class="guide"><div class="number">03</div><h3>Switch mecánico</h3><p>Utiliza un mecanismo físico con contactos eléctricos. Puede ser lineal, táctil o clicky, según el modelo. El color del switch no basta para saber exactamente cómo se siente: hay que mirar la variante concreta.</p></article>
+  </div>
+  <p class="note" style="margin:18px 0 12px">Debajo tienes los 30 teclados y el tipo de switch registrado en sus fichas. En algunos modelos existen distintas versiones o variantes de switch según región y configuración; por eso no invento un color o una referencia exacta cuando el catálogo no la especifica.</p>
+  <div class="guide-grid" id="keyboardSwitchGuide"></div>
+  <div class="heading" style="margin-top:34px"><div><div class="eyebrow">MOUSE KNOWLEDGE</div><h2>GUÍA DE TECNOLOGÍAS DE RATONES</h2></div><p>Aprende qué significan los sensores, el DPI, el polling rate y otras características importantes para elegir un ratón competitivo.</p></div>
+  <div class="guide-grid">
+   <article class="guide"><div class="number">01</div><h3>Sensor óptico</h3><p>La mayoría de ratones gaming actuales utilizan un sensor óptico que lee la superficie mediante luz. Lo importante es que el seguimiento sea estable y no tenga aceleración no deseada; un número enorme de DPI no garantiza mejor puntería.</p></article>
+   <article class="guide"><div class="number">02</div><h3>DPI / CPI</h3><p>Indica cuánto se desplaza el cursor según el movimiento físico del ratón. Más DPI no significa más precisión automáticamente. Muchos jugadores competitivos usan valores moderados y ajustan también la sensibilidad dentro del juego.</p></article>
+   <article class="guide"><div class="number">03</div><h3>Polling rate</h3><p>Es la frecuencia con la que el ratón comunica su posición al ordenador. 1.000 Hz equivale a una actualización cada 1 ms; 4.000 y 8.000 Hz reducen ese intervalo, pero pueden aumentar el uso de CPU y no siempre se nota una mejora.</p></article>
+   <article class="guide"><div class="number">04</div><h3>IPS y aceleración</h3><p>IPS indica la velocidad a la que el sensor puede seguir el movimiento sin perder el seguimiento. La aceleración medida en G indica cuánto cambio de velocidad soporta. Son datos útiles, pero la estabilidad real importa más que perseguir cifras.</p></article>
+   <article class="guide"><div class="number">05</div><h3>Interruptores ópticos y mecánicos</h3><p>Los botones pueden usar interruptores mecánicos tradicionales u ópticos. Los ópticos registran la pulsación mediante luz; los mecánicos mediante contactos físicos. El clic, la duración y el tacto dependen del diseño y la calidad de cada modelo.</p></article>
+   <article class="guide"><div class="number">06</div><h3>Con cable, 2,4 GHz o Bluetooth</h3><p>El cable ofrece conexión directa y no necesita batería. El 2,4 GHz con receptor USB suele ser la opción inalámbrica indicada para jugar con baja latencia. Bluetooth es práctico para ahorrar energía y usar varios dispositivos, pero suele tener más retardo.</p></article>
+   <article class="guide"><div class="number">07</div><h3>Peso y forma</h3><p>Un ratón ligero puede facilitar movimientos rápidos, pero no es automáticamente mejor. La longitud, anchura, altura de la joroba y apoyo lateral deben encajar con tu mano y tu agarre: palma, claw o fingertip.</p></article>
+   <article class="guide"><div class="number">08</div><h3>Patines (skates)</h3><p>Son las piezas de PTFE u otros materiales que rozan con la alfombrilla. Su forma, grosor y superficie cambian el deslizamiento. Unos patines grandes suelen repartir mejor el contacto; la sensación final depende también de la alfombrilla.</p></article>
+   <article class="guide"><div class="number">09</div><h3>Debounce y clics</h3><p>En algunos ratones el debounce ayuda a evitar registros dobles no deseados. Un ajuste demasiado bajo puede provocar clics fantasma en ciertos interruptores; no hace falta ponerlo al mínimo si el ratón ya funciona bien.</p></article>
+   <article class="guide"><div class="number">10</div><h3>Forma de agarre</h3><p>En agarre palm la mano descansa sobre el ratón; en claw los dedos quedan arqueados; en fingertip se controla principalmente con las yemas. No hay un agarre universalmente mejor: elige el que te resulte natural y cómodo.</p></article>
+  </div>
+ </div>
+</section>
+</main>
+
+<footer>
+ ROCKET APP · CONTROLLER LAB<br>
+ Catálogo informativo independiente · 30 mandos, 30 teclados y 21 ratones seleccionados.<br>
+ Las fotos se cargan desde sus fuentes originales y pueden cambiar si el servidor externo las modifica. Consulta siempre la ficha del fabricante.
+</footer>
+
+<script>
+const P=[
+{id:"g78k",name:"GameSir G7 Pro 8K PC Black",brand:"GameSir",platform:["PC"],range:"premium",back:4,sticks:"TMR Gen 2",buttons:"Ópticos / mecánicos",triggers:"Hall Effect / micro switch",connection:"USB-C / 2.4 GHz",features:["back","tmr","mechanical","wireless"],price:"Gama prémium",img:"https://www.notebookcheck.com/fileadmin/Notebooks/News/_nc5/gameSir-G7-Pro-8K-PC-Controller-White-and-Black.jpg",url:"https://gamesir.com/",desc:"Versión para PC con TMR de segunda generación, cuatro macros reasignables y polling rate anunciado de hasta 8.000 Hz.",favorite:true},
+{id:"g7pro",name:"GameSir G7 Pro",brand:"GameSir",platform:["PC","Xbox"],range:"premium",back:4,sticks:"TMR Mag-Res",buttons:"Ópticos / mecánicos",triggers:"Hall Effect con topes",connection:"Cable / 2.4 GHz PC",features:["back","tmr","mechanical","wireless"],price:"Gama prémium",img:"https://gamesir.com/cdn/shop/files/G7Pro_01.jpg",url:"https://gamesir.com/es/products/gamesir-g7-pro",desc:"Mando avanzado con cuatro controles extra, sticks TMR y gatillos de doble modo."},
+{id:"g7se",name:"GameSir G7 SE",brand:"GameSir",platform:["PC","Xbox"],range:"value",back:2,sticks:"Hall Effect",buttons:"Membrana",triggers:"Hall Effect",connection:"Cable",features:["back","hall"],price:"Calidad-precio",img:"https://m.media-amazon.com/images/I/61zQ8y0hQYL._AC_SL1500_.jpg",url:"https://gamesir.com/",desc:"Mando cableado con sticks Hall Effect y dos botones traseros."},
+{id:"tarantula",name:"GameSir Tarantula Pro",brand:"GameSir",platform:["PC","Switch"],range:"value",back:4,sticks:"TMR Mag-Res",buttons:"Micro switch",triggers:"Hall Effect",connection:"Cable / inalámbrico",features:["back","tmr","mechanical","wireless"],price:"Calidad-precio",img:"https://hardzone.es/app/uploads-hardzone.es/2024/10/Gamesir3.jpg",url:"https://gamesir.com/",desc:"Diseño simétrico, personalización y controles extra. Comprueba la versión y plataforma."},
+{id:"cyclone2",name:"GameSir Cyclone 2",brand:"GameSir",platform:["PC","Switch"],range:"value",back:2,sticks:"TMR Mag-Res",buttons:"Micro switch",triggers:"Hall Effect / micro switch",connection:"Cable / 2.4 GHz / Bluetooth",features:["back","tmr","hall","mechanical","wireless"],price:"Calidad-precio",img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/056831cb-0d95-4816-9b1a-e383195a2850.jpg",url:"https://gamesir.com/es/products/gamesir-cyclone2",desc:"Mando multiplataforma con sticks TMR, RGB y gatillos de doble modo."},
+{id:"wolverinev3",name:"Razer Wolverine V3 Pro",brand:"Razer",platform:["PC","Xbox"],range:"premium",back:6,sticks:"Hall Effect",buttons:"Mecha-tactile",triggers:"HyperTriggers",connection:"Cable / inalámbrico",features:["back","hall","mechanical","wireless"],price:"Gama prémium",img:"https://media2.nbb-cdn.de/images/products/Wolverine_V3_Pro_V1_8479.png",url:"https://www.razer.com/",desc:"Modelo prémium con controles extra, sticks Hall Effect y gatillos rápidos."},
+{id:"wolverinev2chroma",name:"Razer Wolverine V2 Chroma",brand:"Razer",platform:["PC","Xbox"],range:"premium",back:6,sticks:"Potenciómetros",buttons:"Mecha-tactile",triggers:"Analógicos",connection:"Cable",features:["back","mechanical"],price:"Gama prémium",img:"https://bestmart.cl/cdn/shop/files/control-xbox-series-xs-con-cable-edicion-razer-wolverine-v2-chroma-8337906_600x.png?v=1761219844",url:"https://www.razer.com/",desc:"Mando con iluminación Chroma, controles extra y botones reasignables."},
+{id:"raiju",name:"Razer Raiju V3 Pro",brand:"Razer",platform:["PS5","PC"],range:"premium",back:4,sticks:"Sensor no confirmado",buttons:"Táctiles",triggers:"Recorrido ajustable",connection:"Cable / inalámbrico",features:["back","wireless"],price:"Gama prémium",img:"https://cdn11.bigcommerce.com/s-ms4wz8cgi2/images/stencil/1280x1280/products/128541/39511/rz06-05580100-razer-raiju-v3-pro__54450.1763458181.jpg?c=1%3Fimbypass%3Don",url:"https://www.razer.com/",desc:"Mando prémium orientado a PlayStation y PC. Consulta compatibilidad y versión."},
+{id:"xboxwireless",name:"Xbox Wireless Controller",brand:"Xbox",platform:["PC","Xbox"],range:"basic",back:0,sticks:"Potenciómetros",buttons:"Tradicionales",triggers:"Analógicos",connection:"Cable / Bluetooth / Xbox Wireless",features:["wireless"],price:"Básico",img:"https://oceanrobotix.com/cdn/shop/files/Xbox_Wireless_Controller_black.jpg?v=1765868693&width=1100",url:"https://www.xbox.com/es-ES/accessories/controllers",desc:"El mando estándar de Xbox. Una opción sencilla y compatible con muchos juegos de PC."},
+{id:"xboxelite2",name:"Xbox Elite Wireless Controller Series 2",brand:"Xbox",platform:["PC","Xbox"],range:"premium",back:4,sticks:"Potenciómetros",buttons:"Tradicionales",triggers:"Topes ajustables",connection:"Cable / inalámbrico",features:["back","wireless"],price:"Gama prémium",img:"https://m.media-amazon.com/images/I/61p5M4Y9QJL._AC_SL1500_.jpg",url:"https://www.xbox.com/es-ES/accessories/controllers/elite-wireless-controller-series-2",desc:"Cuatro palancas traseras, perfiles y componentes intercambiables."},
+{id:"xboxelitecore",name:"Xbox Elite Series 2 Core",brand:"Xbox",platform:["PC","Xbox"],range:"premium",back:0,sticks:"Potenciómetros",buttons:"Tradicionales",triggers:"Topes ajustables",connection:"Cable / inalámbrico",features:["wireless"],price:"Gama prémium",img:"https://www.techno-edge.net/imgs/p/IxjRRzsPFHWQDN9cnAIZOQ2alJUWlZSTkpGQ/1706.jpg",url:"https://www.xbox.com/",desc:"Versión Core del Elite Series 2. Comprueba qué accesorios vienen incluidos."},
+{id:"dualsenseedge",name:"Sony DualSense Edge",brand:"Sony",platform:["PS5","PC"],range:"premium",back:2,sticks:"Potenciómetros (módulos reemplazables)",buttons:"Tradicionales",triggers:"Recorrido ajustable",connection:"Cable / inalámbrico",features:["back","wireless"],price:"Gama prémium",img:"https://negociun.com.br/cdn/shop/files/10890.jpg?v=1722370510&width=1000",url:"https://www.playstation.com/es-es/accessories/dualsense-edge-wireless-controller/",desc:"Dos controles traseros, perfiles y módulos de stick reemplazables."},
+{id:"dualshock4",name:"Sony DualShock 4",brand:"Sony",platform:["PS4","PC"],range:"basic",back:0,sticks:"Potenciómetros",buttons:"Tradicionales",triggers:"Analógicos",connection:"Cable / Bluetooth",features:["wireless"],price:"Básico",img:"https://macrogamesitalia.it/cdn/shop/files/ColoreBiancoMarchioAppleNumerodibatterie1Ionidilitiopilenecessarie._incluse_DimensioniarticoloLxPxA22_1x5_6x2_5cmLebatteriesonoincluseSiBatterienecessarieSiInformazio_20.png?v=1688556462",url:"https://www.playstation.com/",desc:"Mando clásico de PS4. También puede utilizarse en PC con compatibilidad adecuada."},
+{id:"8bitultimate2",name:"8BitDo Ultimate 2 Wireless",brand:"8BitDo",platform:["PC","Switch"],range:"value",back:2,sticks:"TMR",buttons:"Tradicionales",triggers:"Hall Effect",connection:"Cable / 2.4 GHz / Bluetooth",features:["back","tmr","hall","wireless"],price:"Calidad-precio",img:"https://tshop.r10s.jp/glow-bear/cabinet/compass1749106526.jpg?fitin=720%3A720",url:"https://www.8bitdo.com/",desc:"Mando inalámbrico con sticks TMR, controles traseros y base según versión."},
+{id:"8bitpro2",name:"8BitDo Pro 2",brand:"8BitDo",platform:["PC","Switch"],range:"value",back:2,sticks:"Potenciómetros (según versión estándar)",buttons:"Tradicionales",triggers:"Analógicos",connection:"Cable / Bluetooth",features:["back","wireless","hall"],price:"Calidad-precio",img:"https://i5.walmartimages.com/asr/c16b151a-5c9d-4184-9928-a148b8b1ad1c.c02ce0cfe5169a8a7975290c78c4511d.jpeg?odnBg=FFFFFF&odnHeight=2000&odnWidth=2000",url:"https://www.8bitdo.com/pro2/",desc:"Diseño clásico con dos botones traseros y perfiles personalizables."},
+{id:"victrix",name:"Victrix Pro BFG",brand:"Victrix",platform:["PS5","PS4","PC"],range:"premium",back:4,sticks:"Potenciómetros / módulos intercambiables",buttons:"Personalizables",triggers:"Recorrido ajustable",connection:"Cable / inalámbrico",features:["back","wireless"],price:"Gama prémium",img:"https://cdn.mos.cms.futurecdn.net/iPrPyetDn5aBZqGjYgvwN.jpg",url:"https://www.turtlebeach.com/",desc:"Mando modular con controles traseros y piezas intercambiables."},
+{id:"asusraikiri",name:"ASUS ROG Raikiri II",brand:"ASUS",platform:["PC","Xbox"],range:"premium",back:4,sticks:"TMR",buttons:"Mecánicos",triggers:"Hall Effect",connection:"Cable / inalámbrico",features:["back","tmr","mechanical","wireless"],price:"Gama prémium",img:"https://www.superplanshet.ru/images/ROG_Raikiri_II_1441.jpg",url:"https://rog.asus.com/",desc:"Mando avanzado de ASUS ROG con controles adicionales y personalización."},
+{id:"nacon",name:"Nacon Revolution 5 Pro",brand:"Nacon",platform:["PS5","PS4","PC"],range:"premium",back:4,sticks:"Hall Effect",buttons:"Tradicionales",triggers:"Ajustables",connection:"Cable / inalámbrico",features:["back","hall","wireless"],price:"Gama prémium",img:"https://www.maxgaming.se/bilder/artiklar/zoom/28331_1.jpg?m=1696262132",url:"https://www.nacongaming.com/",desc:"Mando premium con sticks Hall Effect y opciones de personalización."},
+{id:"wolverine8k",name:"Razer Wolverine V3 Tournament Edition 8K PC",brand:"Razer",platform:["PC"],range:"premium",back:6,sticks:"TMR",buttons:"Mecha-tactile",triggers:"HyperTriggers",connection:"USB-C",features:["back","tmr","mechanical"],price:"Gama prémium",img:"https://assets3.razerzone.com/aIVpkBIlu6O6lVAa6pBwYqYzEo0%3D/1500x1000/https%3A%2F%2Fmedias-p1.phoenix.razer.com%2Fsys-master-phoenix-images-container%2Fh24%2Fh7a%2F9951122456606%2F250820-wolverine-v3-te-8k-pc-black-1500x1000-1.jpg",url:"https://www.razer.com/es-es/gaming-controllers/razer-wolverine-v3-tournament-edition-8k-pc",desc:"Versión para PC con sticks TMR y HyperPolling de hasta 8.000 Hz."},
+{id:"wolverinev2pro",name:"Razer Wolverine V2 Pro",brand:"Razer",platform:["PS5","PC"],range:"premium",back:6,sticks:"Potenciómetros",buttons:"Mecha-tactile",triggers:"Analógicos",connection:"2.4 GHz / USB-C",features:["back","mechanical","wireless"],price:"Gama prémium",img:"https://assets3.razerzone.com/bdb_DITMcWJXtSCnDY2zJzBJKVA%3D/1500x1000/https%3A%2F%2Fmedias-p1.phoenix.razer.com%2Fsys-master-phoenix-images-container%2Fh0b%2Fh8c%2F9466430914590%2Fwolverine-v2-pro-black-500x500.png",url:"https://www.razer.com/eu-en/console-controllers/Razer-Wolverine-V2-Pro/RZ06-04710100-R3G1",desc:"Mando inalámbrico con seis controles extra y botones mecha-tactile."},
+{id:"vader4",name:"Flydigi Vader 4 Pro",brand:"Flydigi",platform:["PC","Switch"],range:"value",back:4,sticks:"Hall Effect ajustables",buttons:"Mecánicos",triggers:"Hall Effect / modo rápido",connection:"Cable / 2.4 GHz / Bluetooth",features:["back","hall","mechanical","wireless"],price:"Calidad-precio",img:"https://us.maxgaming.com/bilder/artiklar/zoom/34367_3.jpg?m=1741344813",url:"https://www.flydigi.com/",desc:"Sticks con tensión ajustable, controles adicionales y conexión de baja latencia."},
+{id:"apex4",name:"Flydigi Apex 4",brand:"Flydigi",platform:["PC","Switch"],range:"premium",back:4,sticks:"Hall Effect con tensión ajustable",buttons:"Micro switch",triggers:"Adaptativos",connection:"Cable / 2.4 GHz / Bluetooth",features:["back","hall","mechanical","wireless"],price:"Gama prémium",img:"https://i8.momoshop.com.tw/1756804152/goodsimg/TP000/3453/0000/487/TP00034530000487_R_m.jpg",url:"https://www.flydigi.com/",desc:"Mando avanzado con sticks ajustables, pantalla y gatillos con respuesta adaptable."},
+{id:"vader5",name:"Flydigi Vader 5 Pro",brand:"Flydigi",platform:["PC","Switch"],range:"premium",back:4,sticks:"Hall Effect",buttons:"Mecánicos",triggers:"ForceSwitch",connection:"Cable / 2.4 GHz / Bluetooth",features:["back","hall","mechanical","wireless"],price:"Gama prémium",img:"https://flydigibrasil.com.br/cdn/shop/files/Flydigi_Vader_5_Pro_-_1.jpg?v=1770664447&width=1220",url:"https://flydigibrasil.com.br/products/vader-5-pro",desc:"Mando competitivo con sticks magnéticos, botones extra y gatillos de accionamiento rápido."},
+{id:"kk3max",name:"GuliKit KK3 Max",brand:"GuliKit",platform:["PC","Switch"],range:"premium",back:4,sticks:"Hall Effect",buttons:"Mecánicos",triggers:"Hall Effect",connection:"Cable / Bluetooth / 2.4 GHz",features:["back","hall","mechanical","wireless"],price:"Gama prémium",img:"https://down-my.img.susercontent.com/file/my-11134207-7r98p-lqpt3gn893y6f1",url:"https://www.gulikit.com/",desc:"Mando inalámbrico con cuatro paletas traseras y sensores Hall en sticks y gatillos."},
+{id:"ultimate2c",name:"8BitDo Ultimate 2C Wireless",brand:"8BitDo",platform:["PC","Android"],range:"budget",back:0,sticks:"Hall Effect",buttons:"Tradicionales",triggers:"Hall Effect",connection:"2.4 GHz / Bluetooth",features:["hall","wireless"],price:"Económico",img:"https://images-na.ssl-images-amazon.com/images/I/51TFKr%2BDgpL.jpg",url:"https://www.8bitdo.com/ultimate-2c-wireless-controller/",desc:"Opción económica con sticks y gatillos Hall Effect y respuesta rápida en PC."},
+{id:"stealthultra",name:"Turtle Beach Stealth Ultra",brand:"Turtle Beach",platform:["PC","Xbox"],range:"premium",back:4,sticks:"Hall Effect",buttons:"Micro switch",triggers:"Ajustables",connection:"2.4 GHz / Bluetooth / USB-C",features:["back","hall","mechanical","wireless"],price:"Gama prémium",img:"https://4news.it/wp-content/uploads/2023/11/Turtle-Beach-Stealth-Ultra-Controller-Product-Image-2.jpg",url:"https://www.turtlebeach.com/",desc:"Mando inalámbrico con pantalla, controles traseros y sticks Hall Effect."},
+{id:"fusionpro4",name:"PowerA Fusion Pro 4",brand:"PowerA",platform:["PC","Xbox"],range:"value",back:4,sticks:"Hall Effect",buttons:"Tradicionales",triggers:"Hall Effect con topes",connection:"Cable USB-C",features:["back","hall"],price:"Calidad-precio",img:"https://multiplayer.net-cdn.it/thumbs/images/2024/10/05/powera-fusion-pro-4_3_jpeg_1400x0_q85.jpg",url:"https://www.powera.com/",desc:"Mando cableado con cuatro botones traseros y sticks Hall Effect."},
+{id:"envisionpro",name:"SCUF Envision Pro",brand:"SCUF",platform:["PC"],range:"premium",back:4,sticks:"Hall Effect Endurance",buttons:"Omron mecánicos",triggers:"Instantáneos ajustables",connection:"USB-C / Slipstream",features:["back","hall","mechanical","wireless"],price:"Gama prémium",img:"https://res.cloudinary.com/scuf-pwa/image/upload/v1759865534/envision-pro-whiteblack-front-pc-controller-750x750_2x_ds6bus.png",url:"https://www.scufgaming.com/eu/en/p/scuf-envision-pro-white-black-he",desc:"Mando para PC con cuatro paletas, teclas G y gatillos de modo dual."},
+{id:"victrixgambit",name:"Victrix Gambit Prime",brand:"Victrix",platform:["PC","Xbox"],range:"value",back:2,sticks:"Potenciómetros",buttons:"Tradicionales",triggers:"Analógicos",connection:"Cable USB",features:["back"],price:"Calidad-precio",img:"https://pimcdn.sharafdg.com/cdn-cgi/image/width%3D1000%2Cheight%3D1000%2Cfit%3Dpad%2Cformat%3Dwebp%2Cquality%3D70/images/S500924709_1?1742972292%3Fg=0",url:"https://www.turtlebeach.com/",desc:"Mando cableado de torneo con perfiles y controles adicionales para Xbox y PC."},
+{id:"direwolf3",name:"Flydigi Direwolf 3",brand:"Flydigi",platform:["PC","Switch"],range:"budget",back:2,sticks:"Hall Effect (palancas Flydigi)",buttons:"Silicona",triggers:"Hall Effect",connection:"Cable / Bluetooth / 2.4 GHz",features:["back","hall","wireless"],price:"Económico",img:"https://www.whatgeek.com/cdn/shop/files/Flydigi_Direwolf_3_Gaming_Controller_1.jpg?v=1744683597&width=4096",url:"https://www.flydigi.com/",desc:"Mando asequible con dos macros traseras, gatillos Hall Effect y polling rate anunciado de 1.000 Hz."}
+];
+
+
+const K=[
+{id:'wooting80he',name:'Wooting 80HE',brand:'Wooting',size:'TKL (80%)',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Hasta 8.000 Hz',connection:'USB-C',price:'Prémium',desc:'Teclado magnético TKL con punto de actuación ajustable y Rapid Trigger.',url:'https://wooting.io/wooting-80he',accent:'#f43b4d'},
+{id:'wooting60hev2',name:'Wooting 60HE v2',brand:'Wooting',size:'60%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Alta frecuencia (según versión)',connection:'USB-C',price:'Prémium',desc:'Formato 60% centrado en juego competitivo, con actuación ajustable.',url:'https://wooting.io/',accent:'#ff765e'},
+{id:'wooting60heplus',name:'Wooting 60HE+',brand:'Wooting',size:'60%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'USB-C',price:'Prémium',desc:'Modelo compacto muy conocido por su respuesta analógica y Rapid Trigger.',url:'https://wooting.io/',accent:'#e85b70'},
+{id:'wootingtwohe',name:'Wooting Two HE',brand:'Wooting',size:'100%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'USB-C',price:'Prémium',desc:'Versión de tamaño completo con switches Lekker y funciones analógicas.',url:'https://wooting.io/',accent:'#e84b5b'},
+{id:'razerhuntsmanv3mini',name:'Razer Huntsman V3 Pro Mini',brand:'Razer',size:'60%',switch:'Óptico',rapid:'Sí',polling:'Hasta 8.000 Hz',connection:'USB-C',price:'Prémium',desc:'Teclado óptico analógico 60% con Rapid Trigger y accionamiento regulable.',url:'https://www.razer.com/es-es/gaming-keyboards/razer-huntsman-v3-pro-mini/RZ03-04990600-R3N1',accent:'#65df8d'},
+{id:'razerhuntsmantkl',name:'Razer Huntsman V3 Pro TKL',brand:'Razer',size:'TKL (80%)',switch:'Óptico',rapid:'Sí',polling:'Hasta 8.000 Hz',connection:'USB-C',price:'Prémium',desc:'Formato TKL con switches ópticos analógicos y ajustes para juego competitivo.',url:'https://www.razer.com/es-es/gaming-keyboards',accent:'#5edb8a'},
+{id:'razerhuntsmanmini',name:'Razer Huntsman Mini',brand:'Razer',size:'60%',switch:'Óptico',rapid:'No',polling:'1.000 Hz',connection:'USB-C',price:'Calidad-precio',desc:'Teclado óptico compacto para escritorios con poco espacio.',url:'https://www.razer.com/es-es/gaming-keyboards',accent:'#58d58b'},
+{id:'steelapexprotkl',name:'SteelSeries Apex Pro TKL Gen 3',brand:'SteelSeries',size:'TKL (80%)',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Hasta 1.000 Hz',connection:'USB-C',price:'Prémium',desc:'Switches OmniPoint ajustables y funciones de activación rápida.',url:'https://steelseries.com/es-es/gaming-keyboards/apex-pro',accent:'#e8b65c'},
+{id:'steelapexpromini',name:'SteelSeries Apex Pro Mini',brand:'SteelSeries',size:'60%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'USB-C',price:'Prémium',desc:'Formato 60% con actuación ajustable y switches OmniPoint.',url:'https://steelseries.com/es-es/gaming-keyboards/apex-pro',accent:'#e8b65c'},
+{id:'steelapexprominiwireless',name:'SteelSeries Apex Pro Mini Wireless',brand:'SteelSeries',size:'60%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'2.4 GHz / Bluetooth / USB-C',price:'Prémium',desc:'Versión inalámbrica compacta con switches OmniPoint ajustables.',url:'https://steelseries.com/es-es/gaming-keyboards/apex-pro',accent:'#e8b65c'},
+{id:'logitechrapid',name:'Logitech G Pro X TKL RAPID',brand:'Logitech',size:'TKL (80%)',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Hasta 8.000 Hz',connection:'USB-C',price:'Prémium',desc:'Teclado TKL magnético con Rapid Trigger y punto de actuación ajustable.',url:'https://www.logitechg.com/',accent:'#5da9ff'},
+{id:'logitechproxtkl',name:'Logitech G Pro X TKL',brand:'Logitech',size:'TKL (80%)',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'Cable / LIGHTSPEED',price:'Prémium',desc:'Teclado TKL para esports con opciones inalámbricas según versión.',url:'https://www.logitechg.com/',accent:'#5da9ff'},
+{id:'keychronk2he',name:'Keychron K2 HE',brand:'Keychron',size:'75%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'Cable / 2.4 GHz / Bluetooth',price:'Calidad-precio',desc:'Teclado 75% con switches magnéticos, actuación ajustable y Rapid Trigger.',url:'https://www.keychron.com/products/keychron-k2-he-wireless-magnetic-switch-keyboard',accent:'#d9a76b'},
+{id:'keychronq1he',name:'Keychron Q1 HE',brand:'Keychron',size:'75%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'Cable / 2.4 GHz',price:'Prémium',desc:'Construcción de gama alta con switches magnéticos y personalización avanzada.',url:'https://www.keychron.com/',accent:'#d9a76b'},
+{id:'keychronv1max',name:'Keychron V1 Max',brand:'Keychron',size:'75%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'Cable / 2.4 GHz / Bluetooth',price:'Calidad-precio',desc:'Teclado mecánico 75% versátil para jugar y escribir.',url:'https://www.keychron.com/',accent:'#d9a76b'},
+{id:'drunkdeera75pro',name:'DrunkDeer A75 Pro',brand:'DrunkDeer',size:'75%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'USB-C',price:'Calidad-precio',desc:'Teclado magnético compacto con Rapid Trigger y ajustes por software.',url:'https://drunkdeer.com/',accent:'#9c85ff'},
+{id:'drunkdeerg75',name:'DrunkDeer G75',brand:'DrunkDeer',size:'75%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'1.000 Hz',connection:'USB-C',price:'Calidad-precio',desc:'Modelo magnético con formato 75% y funciones de actuación rápida.',url:'https://drunkdeer.com/',accent:'#9c85ff'},
+{id:'asusazoth',name:'ASUS ROG Azoth',brand:'ASUS',size:'75%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'Cable / 2.4 GHz / Bluetooth',price:'Prémium',desc:'Teclado 75% premium con pantalla OLED y conectividad triple.',url:'https://rog.asus.com/es/keyboards/',accent:'#f04b52'},
+{id:'asusazothextreme',name:'ASUS ROG Azoth Extreme',brand:'ASUS',size:'75%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'Cable / 2.4 GHz / Bluetooth',price:'Prémium',desc:'Versión avanzada con estructura premium y pantalla OLED.',url:'https://rog.asus.com/es/keyboards/keyboards/compact/rog-azoth-extreme/gallery/',accent:'#f04b52'},
+{id:'corsairk70max',name:'Corsair K70 MAX',brand:'Corsair',size:'100%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Hasta 8.000 Hz',connection:'USB-C',price:'Prémium',desc:'Switches MGX magnéticos con actuación ajustable y doble punto de actuación.',url:'https://www.corsair.com/',accent:'#e5bd59'},
+{id:'corsairk65plus',name:'Corsair K65 Plus Wireless',brand:'Corsair',size:'75%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'Cable / 2.4 GHz / Bluetooth',price:'Calidad-precio',desc:'Formato compacto 75% con conexión inalámbrica y switches mecánicos.',url:'https://www.corsair.com/',accent:'#e5bd59'},
+{id:'hyperxalloyorigins60',name:'HyperX Alloy Origins 60',brand:'HyperX',size:'60%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'USB-C',price:'Calidad-precio',desc:'Teclado 60% compacto con switches mecánicos HyperX.',url:'https://hyperx.com/',accent:'#d95765'},
+{id:'hyperxalloyoriginscore',name:'HyperX Alloy Origins Core',brand:'HyperX',size:'TKL (80%)',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'USB-C',price:'Calidad-precio',desc:'Formato TKL sólido y sencillo, pensado para gaming.',url:'https://hyperx.com/',accent:'#d95765'},
+{id:'akkomod007bhe',name:'Akko MOD 007B HE',brand:'Akko',size:'75%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Hasta 8.000 Hz (según versión)',connection:'Cable / 2.4 GHz / Bluetooth',price:'Calidad-precio',desc:'Teclado magnético 75% con Rapid Trigger y opciones inalámbricas.',url:'https://akkogear.eu/',accent:'#71b5ff'},
+{id:'monsgeekfun60',name:'MonsGeek FUN60 Pro HE',brand:'MonsGeek',size:'60%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Hasta 8.000 Hz',connection:'USB-C',price:'Económico',desc:'Opción magnética compacta con Rapid Trigger y tasa de sondeo alta.',url:'https://akkogear.eu/es/products/fun60-pro-iso-he-magnetic-keyboard',accent:'#71b5ff'},
+{id:'duckyone3mini',name:'Ducky One 3 Mini',brand:'Ducky',size:'60%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'USB-C',price:'Calidad-precio',desc:'Teclado mecánico 60% conocido por su construcción y variedad de switches.',url:'https://www.duckychannel.com.tw/',accent:'#e5b65b'},
+{id:'gloriousgmmk2',name:'Glorious GMMK 2 65%',brand:'Glorious',size:'65%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'USB-C',price:'Calidad-precio',desc:'Formato 65% con switches intercambiables y diseño compacto.',url:'https://www.gloriousgaming.com/',accent:'#d4d9e3'},
+{id:'mountaineverest60',name:'Mountain Everest 60',brand:'Mountain',size:'60%',switch:'Mecánico',rapid:'No',polling:'1.000 Hz',connection:'USB-C',price:'Prémium',desc:'Teclado modular compacto con opciones de accesorios y switches mecánicos.',url:'https://mountain.gg/',accent:'#8f9baa'},
+{id:'endgamekb65',name:'Endgame Gear KB65HE',brand:'Endgame Gear',size:'65%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Hasta 8.000 Hz',connection:'USB-C',price:'Prémium',desc:'Teclado magnético 65% enfocado en baja latencia y ajustes de activación.',url:'https://www.endgamegear.com/',accent:'#8bc8ff'},
+{id:'atkrs7',name:'ATK RS7 V2 Ultra',brand:'ATK',size:'75%',switch:'Magnético (Hall Effect)',rapid:'Sí',polling:'Alta frecuencia (según versión)',connection:'USB-C',price:'Calidad-precio',desc:'Teclado magnético compacto que prioriza las funciones competitivas.',url:'https://www.atkgear.com/',accent:'#ff7b60'}
+];
+// Fotografías de producto para el catálogo de teclados. Las fichas de mandos se mantienen intactas.
+const KEYBOARD_IMAGES = {"wooting80he": "https://www.maxgaming.gg/bilder/artiklar/zoom/31842_1.jpg?m=1725285016", "wooting60hev2": "https://wooting-website.ams3.cdn.digitaloceanspaces.com/products/keyboards/60HEv2/60he-v2_og-and-split.webp", "wooting60heplus": "https://pantheonkeys.com/cdn/shop/files/pantheonwooting60he.webp?v=1752733882", "wootingtwohe": "https://wooting-website.ams3.cdn.digitaloceanspaces.com/products/keyboards/W2HE/W2HE-front-view.webp", "razerhuntsmanv3mini": "https://medias-p1.phoenix.razer.com/sys-master-phoenix-images-container/h2b/h42/9662065442846/230921-huntsman-v3-pro-mini-black-1500x1000-1.jpg", "razerhuntsmantkl": "https://i5.walmartimages.com/seo/Razer-Huntsman-V3-Pro-TKL-Tenkeyless-Analog-Optical-Esports-Keyboard-Snap-Tap-RGB-Chroma-Black_f887392f-5709-4493-b392-c8c220b0193f.3e446277a20c521e1b8a45d597d0c948.png?odnBg=FFFFFF&odnHeight=768&odnWidth=768", "razerhuntsmanmini": "https://storage.iserp.cloud/eci/inventory/item/media/1614996891859-rz03-03390100-r3m1-image-main-600x600.jpg?format=webp&quality=100&transform=1&width=1200", "steelapexprotkl": "https://content1.rozetka.com.ua/goods/images/big/531569576.jpg", "steelapexpromini": "https://ignitestore.mx/assets/uploads/sw_steel_series_apex_pro_mini_1_1.png", "steelapexprominiwireless": "https://media.power-cdn.net/images/h-b60f086ed94d17c80e01465ba64668a8/products/2439431/2439431_4_600x600_t_g.webp", "logitechrapid": "https://resource.logitech.com/content/dam/gaming/en/products/pro-x-tkl-rapid/gallery/pro-x-tkl-rapid-black-gallery-1-us-intl.png", "logitechproxtkl": "https://www.axro.com/media/4c/72/e0/1743594690/log-loggpxttbu-1.png", "keychronk2he": "https://media.pichau.com.br/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/k/2/k2h-j116451.jpg", "keychronq1he": "https://allegro.stati.pl/AllegroIMG/PRODUCENCI/Keychron/Q1H-M1/keychron-Q1H-M1-02.jpg", "keychronv1max": "https://static01.galaxus.com/productimages/2/2/1/0/7/3/3/1/7/5/6/3/0/9/8/9/8/34759f09-bc8e-4dd4-af63-47f907ca0248_cropped.jpg_sea.jpeg", "drunkdeera75pro": "https://drunkdeer.com/cdn/shop/files/DSC04850.jpg?v=1706147845", "drunkdeerg75": "https://drunkdeer.com/cdn/shop/files/G75_-_black_HE_Keyboard.jpg?v=1765162393&width=1600", "asusazoth": "https://i5.walmartimages.com/seo/ASUS-ROG-Azoth-75-Wireless-DIY-Custom-Gaming-Keyboard-OLED-display-Gasket-Mount-Three-Layer-Dampening-Hot-Swappable-Pre-lubed-ROG-NX-Snow-Switches-Ke_39fa9255-3858-4339-a13e-abbf812500b9.259911cf9dccd02d22e8eb9a927cd775.png", "asusazothextreme": "https://dlcdnwebimgs.asus.com/gain/A2AF9D47-DE84-4B81-8DD1-EF70766C67D1/w1000/h732", "corsairk70max": "https://media.ldlc.com/r1600/ld/products/00/06/05/74/LD0006057447.jpg", "corsairk65plus": "https://cdn.mwave.com.au/images/400/corsair_k65_plus_wireless_75_rgb_mechanical_gaming_keyboard_black_ac87951_32042.jpg", "hyperxalloyorigins60": "https://uk.hyperx.com/cdn/shop/files/hyperx_alloy_origins_60_red_us_4p5n4aa_23aba_angle_5.jpg?v=1763132939", "hyperxalloyoriginscore": "https://hyperx.com/cdn/shop/files/hyperx_alloy_origins_core_us_1_top_down_renamed_0.jpg?v=1771262809", "akkomod007bhe": "https://akkogear.eu/cdn/shop/files/MOD007B-HE-White-Starry-Night-1.png?v=1698844766&width=2000", "monsgeekfun60": "https://cdn.shopify.com/s/files/1/0734/3033/5775/files/MonsGeek-FUN60-Pro-Black-RGB.png?v=1751450511&width=800", "duckyone3mini": "https://mechanicalkeyboards.com/cdn/shop/files/15455_643f62cbefb12_One-3-Mini-Cosmic.jpg?v=1708569730&width=2400", "gloriousgmmk2": "https://ecommerce.datablitz.com.ph/cdn/shop/products/glorious_keyboards_gmmk_2_white_1600x.jpg?v=1676864100", "mountaineverest60": "https://cdn.trendhunterstatic.com/thumbs/487/everest-60.jpeg?auto=webp", "endgamekb65": "https://cdn.mos.cms.futurecdn.net/XuVZvMQoVEP6ninoQdwPVF.jpg", "atkrs7": "https://bizweb.dktcdn.net/100/506/630/products/8c8c003b-9808-4ab4-9c17-7da80900f59c.png?v=1774635349610"};
+K.forEach(k => { k.img = KEYBOARD_IMAGES[k.id] || ""; });
+
+
+const M=[
+{id:'gpxs2',name:'Logitech G Pro X Superlight 2',brand:'Logitech',weight:60,connection:'Inalámbrico',shape:'Simétrica',sensor:'HERO 2',polling:'Hasta 8.000 Hz*',desc:'Una apuesta muy segura para esports: forma simétrica, peso bajo y sensor de gama alta.',url:'https://www.logitechg.com/es-es/products/gaming-mice/pro-x2-superlight-wireless-mouse.html',accent:'#f43b4d'},
+{id:'logitech-pro2',name:'Logitech G PRO 2 LIGHTSPEED',brand:'Logitech',weight:80,connection:'Inalámbrico',shape:'Simétrica ambidiestra',sensor:'HERO 2',polling:'Hasta 1.000 Hz (8.000 Hz con receptor opcional)',desc:'Ratón simétrico y ambidiestro con botones laterales magnéticos intercambiables.',url:'https://www.logitechg.com/es-es/shop/p/pro-2-lightspeed',accent:'#45baff'},
+{id:'gpxs2dex',name:'Logitech G Pro X Superlight 2 DEX',brand:'Logitech',weight:60,connection:'Inalámbrico',shape:'Ergonómica derecha',sensor:'HERO 2',polling:'Hasta 8.000 Hz*',desc:'Diseño asimétrico para diestros, con apoyo más marcado para la mano.',url:'https://www.logitechg.com/es-es',accent:'#d8e2ef'},
+{id:'viper-v3-pro',name:'Razer Viper V3 Pro',brand:'Razer',weight:54,connection:'Inalámbrico',shape:'Simétrica',sensor:'Focus Pro 35K Gen-2',polling:'Hasta 8.000 Hz',desc:'Muy ligero y orientado a FPS competitivo, con forma simétrica y receptor de alta frecuencia.',url:'https://www.razer.com/es-es/gaming-mice/razer-viper-v3-pro',accent:'#65df8d'},
+{id:'deathadder-v4-pro',name:'Razer DeathAdder V4 Pro',brand:'Razer',weight:56,connection:'Inalámbrico',shape:'Ergonómica derecha',sensor:'Focus Pro 45K Gen-2',polling:'Hasta 8.000 Hz',desc:'Forma ergonómica para diestros, con carcasa ligera y sensor de gama alta.',url:'https://www.razer.com/es-es/gaming-mice/razer-deathadder-v4-pro',accent:'#8be06b'},
+{id:'deathadder-v3-hs',name:'Razer DeathAdder V3 HyperSpeed',brand:'Razer',weight:55,connection:'Inalámbrico',shape:'Ergonómica derecha',sensor:'Focus X 26K',polling:'Hasta 1.000 Hz (más con receptor compatible)',desc:'Alternativa ergonómica y ligera, más compacta que otros modelos DeathAdder.',url:'https://www.razer.com/es-es/gaming-mice/razer-deathadder-v3-hyperspeed',accent:'#73d7a0'},
+{id:'pulsar-x2v2',name:'Pulsar X2V2',brand:'Pulsar',weight:53,connection:'Inalámbrico',shape:'Simétrica',sensor:'PixArt PAW3395',polling:'Hasta 4.000 Hz con receptor compatible',desc:'Forma simétrica equilibrada, carcasa ligera y varias tallas para distintos agarres.',url:'https://www.pulsar.gg/',accent:'#9c86ff'},
+{id:'pulsar-x2h',name:'Pulsar X2H',brand:'Pulsar',weight:53,connection:'Inalámbrico',shape:'Simétrica, joroba alta',sensor:'PixArt PAW3395',polling:'Hasta 4.000 Hz con receptor compatible',desc:'Joroba trasera más alta que puede encajar mejor con agarre claw.',url:'https://www.pulsar.gg/',accent:'#b48cff'},
+{id:'pulsar-xlite-v4',name:'Pulsar Xlite V4',brand:'Pulsar',weight:48,connection:'Inalámbrico',shape:'Ergonómica derecha',sensor:'PixArt PAW3950',polling:'Hasta 8.000 Hz con receptor compatible',desc:'Opción ultraligera y ergonómica para diestros, con diseño pensado para FPS.',url:'https://www.pulsar.gg/',accent:'#7cd8ff'},
+{id:'lamzu-maya-x',name:'LAMZU Maya X',brand:'Lamzu',weight:47,connection:'Inalámbrico',shape:'Simétrica',sensor:'PixArt PAW3950',polling:'Hasta 8.000 Hz',desc:'Diseño limpio y muy ligero, con acabados cuidados y enfoque competitivo.',url:'https://lamzu.com/',accent:'#e8b6ff'},
+{id:'lamzu-atlantis-mini',name:'LAMZU Atlantis Mini',brand:'Lamzu',weight:51,connection:'Inalámbrico',shape:'Simétrica compacta',sensor:'PixArt PAW3395',polling:'Hasta 4.000 Hz con receptor compatible',desc:'Formato pequeño con joroba marcada, interesante para manos pequeñas y agarre claw.',url:'https://lamzu.com/',accent:'#ffb86b'},
+{id:'endgame-op1-8k',name:'Endgame Gear OP1 8K',brand:'Endgame Gear',weight:49.5,connection:'Cable',shape:'Simétrica compacta',sensor:'PixArt PAW3950',polling:'Hasta 8.000 Hz',desc:'Ratón con cable muy ligero y forma estrecha, pensado para control preciso en FPS.',url:'https://www.endgamegear.com/en-us/gaming-mice/op1-8k',accent:'#f0d27a'},
+{id:'hyperx-haste2',name:'HyperX Pulsefire Haste 2',brand:'HyperX',weight:53,connection:'Cable',shape:'Simétrica',sensor:'HyperX 26K',polling:'Hasta 8.000 Hz',desc:'Ligero, sencillo y con cable flexible; buena opción si no necesitas conexión inalámbrica.',url:'https://hyperx.com/collections/gaming-mice',accent:'#ef5c66'},
+{id:'atk-a9plus',name:'ATK Dragonfly A9 Plus',brand:'ATK',weight:57,connection:'Inalámbrico',shape:'Simétrica',sensor:'Según versión',polling:'Hasta 8.000 Hz según versión',desc:'Diseño moderno, peso contenido y varias configuraciones; revisa bien la versión exacta.',url:'https://www.atk.store/',accent:'#65c9ff'},
+{id:'razer-viper-v3-hyperspeed',name:'Razer Viper V3 HyperSpeed',brand:'Razer',weight:82,connection:'Inalámbrico',shape:'Simétrica',sensor:'Focus Pro 30K',polling:'Hasta 4.000 Hz',desc:'Forma simétrica con joroba trasera y sensor Focus Pro, pensada para agarres claw y fingertip.',url:'https://www.razer.com/es-es/gaming-mice/razer-viper-v3-hyperspeed',accent:'#65df8d'},
+{id:'mchose-a7v2pro',name:'MCHOSE A7 V2 Pro',brand:'MCHOSE',weight:59,connection:'Inalámbrico',shape:'Simétrica',sensor:'PixArt PAW3395',polling:'Hasta 8.000 Hz según versión',desc:'Diseño sobrio y ligero, con distintas versiones de sensor y receptor.',url:'https://www.mchose.store/',accent:'#9ba9ff'},
+{id:'ajazz-aj159pro',name:'AJAZZ AJ159 Pro',brand:'Ajazz',weight:56,connection:'Inalámbrico',shape:'Simétrica',sensor:'PixArt PAW3395',polling:'Hasta 8.000 Hz según versión',desc:'Estética llamativa y base de carga en algunas ediciones; comprueba el pack exacto.',url:'https://ajazzstore.com/',accent:'#ff8fba'},
+{id:'scyrox-v8',name:'Scyrox V8',brand:'Scyrox',weight:36,connection:'Inalámbrico',shape:'Simétrica',sensor:'PixArt PAW3950',polling:'Hasta 8.000 Hz',desc:'Ultraligero para quien prioriza mover el ratón con muy poca resistencia.',url:'https://scyrox.com/',accent:'#c4e2ff'},
+{id:'ninjutso-sora-v2',name:'Ninjutso Sora V2',brand:'Ninjutso',weight:42,connection:'Inalámbrico',shape:'Simétrica',sensor:'PixArt PAW3395',polling:'Hasta 1.000 Hz',desc:'Carcasa muy ligera y forma simétrica, conocida entre jugadores de FPS.',url:'https://ninjutso.com/',accent:'#f4f4f4'},
+{id:'zowie-u2-dw',name:'ZOWIE U2-DW',brand:'Zowie',weight:58,connection:'Inalámbrico',shape:'Simétrica ergonómica',sensor:'Sensor ZOWIE',polling:'Hasta 4.000 Hz',desc:'Forma diseñada para agarres de claw y movimientos rápidos, con enfoque esports.',url:'https://zowie.benq.com/en-us/mouse/u2-dw.html',accent:'#e6a85c'},
+{id:'attack-shark-x8-se-pink',name:'ATTACK SHARK X8 SE (Rosa)',brand:'Attack Shark',weight:55,connection:'Inalámbrico',shape:'Simétrica',sensor:'PixArt PAW3311',polling:'Hasta 1.000 Hz',desc:'Ratón ligero en color rosa con conexión triple: 2.4 GHz, Bluetooth o USB-C. Ofrece hasta 25.000 DPI y batería recargable de 500 mAh.',url:'https://attackshark.com/products/attack-shark-x8ultra-tri-mode-wireless-gaming-mouse-42000-dpi-ultra-lightweight',accent:'#ff69ad'}
+];
+const MOUSE_IMAGES={
+'gpxs2':'https://www.maxgaming.fi/bilder/artiklar/28010.jpg?m=1692971556',
+'logitech-pro2':'https://www.jib.co.th/img_master/product/original/2024091814213370644_1.jpg',
+'gpxs2dex':'https://resource.logitechg.com/w_544,h_466,ar_7:6,c_pad,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight-2-dex/gallery/new-gallery-assets-2025/pro-x-superlight-2-dex-mouse-top-angle-black-gallery-1.png',
+'viper-v3-pro':'https://www.cclonline.com/images/shopblocks/Viper_V3_Pro_V1.png',
+'deathadder-v4-pro':'https://assets.umart.com.au/newsite/images/202507/source_img/Razer-DeathAdder-V4-Pro-Wireless-Esports-Gaming-Mouse-White-RZ01-05330200-6.jpg',
+'deathadder-v3-hs':'https://media.binglee.com.au/cdn-cgi/image/fit%3Dscale-down%2Cf%3Dauto%2Cw%3D1200/e/f/a/9/efa96a648fa8be9ddefdeca7e2a72a544eba54b6_Razer_RZ01_05140100_Mice_Hero_1.jpg',
+'pulsar-x2v2':'https://img.danawa.com/prod_img/500000/897/511/img/28511897_1.jpg?_v=20231004093918&shrink=360%3A360',
+'pulsar-x2h':'https://down-th.img.susercontent.com/file/th-11134207-7ras9-m0mva05ib7i250',
+'pulsar-xlite-v4':'https://www.phongcachxanh.vn/cdn/shop/files/chu-t-khong-day-sieu-nh-pulsar-xlite-v4-h-tr-8k-polling-rate-42365891838197.jpg?v=1732175066',
+'lamzu-maya-x':'https://mks.blr1.cdn.digitaloceanspaces.com/uploads/2024/09/MayaX8K-2.webp',
+'lamzu-atlantis-mini':'https://image.coupangcdn.com/image/vendor_inventory/5f81/230dc0b161fb61b2e04f3d64f91fc2b2fe1a76c972cd2a82331e6570c8d0.jpg',
+'endgame-op1-8k':'https://img.endgamegear.com/images/GAMO-1187/03a34a131e27c7d7b95fd77e91321196.jpg',
+'hyperx-haste2':'https://hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_2_black_1_main_medium.jpg?v=1763563280',
+'atk-a9plus':'https://i.ebayimg.com/images/g/Q0IAAeSwEnVocLFZ/s-l1200.jpg',
+'razer-viper-v3-hyperspeed':'https://www.proshop.de/Images/915x900/3194227_96b56e52ff36.png',
+'mchose-a7v2pro':'https://bizweb.dktcdn.net/100/506/630/products/77d07a52-9728-41b7-ad98-42fe8bc9680d.png?v=1780116928953',
+'ajazz-aj159pro':'https://down-id.img.susercontent.com/file/sg-11134201-8259t-mg4nikxqccgebd',
+'scyrox-v8':'https://salt.tikicdn.com/ts/product/0c/b0/32/6e2f3c381ad4d736f669289931c87809.jpg',
+'ninjutso-sora-v2':'https://micemod.gg/cdn/shop/files/3_09d7ae81-4756-4675-b557-272d6b2be200.webp?v=1717838334&width=1445',
+'zowie-u2-dw':'https://www.addiceinc.com/cdn/shop/files/ZOWIE_U2-DW_4K_Wireless_Mouse.avif?v=1755274880&width=2000',
+'attack-shark-x8-se-pink':'https://content1.rozetka.com.ua/goods/images/big/612522870.jpg'
+};
+const MOUSE_TIERS={'gpxs2':'premium','logitech-pro2':'premium','gpxs2dex':'premium','viper-v3-pro':'premium','deathadder-v4-pro':'premium','deathadder-v3-hs':'value','pulsar-x2v2':'premium','pulsar-x2h':'premium','pulsar-xlite-v4':'premium','lamzu-maya-x':'premium','lamzu-atlantis-mini':'premium','endgame-op1-8k':'value','hyperx-haste2':'value','atk-a9plus':'value','razer-viper-v3-hyperspeed':'value','mchose-a7v2pro':'value','ajazz-aj159pro':'value','scyrox-v8':'premium','ninjutso-sora-v2':'premium','zowie-u2-dw':'premium','attack-shark-x8-se-pink':'value'};
+M.forEach(m=>{m.img=MOUSE_IMAGES[m.id]||'';m.tier=MOUSE_TIERS[m.id]||'value';});
+function mouseArt(m){
+ const id='mg'+m.id;
+ return `<div class="mouse-art"><svg viewBox="0 0 300 165" role="img" aria-label="Ilustración de ratón gaming ${m.name}"><defs><linearGradient id="${id}" x1="0" x2="1" y1="0" y2="1"><stop stop-color="${m.accent}"/><stop offset="1" stop-color="#273449"/></linearGradient></defs><ellipse cx="150" cy="139" rx="74" ry="12" fill="#000" opacity=".35"/><path d="M150 17 C103 17 77 47 77 91 V105 C77 135 105 151 150 151 C195 151 223 135 223 105 V91 C223 47 197 17 150 17Z" fill="url(#${id})" stroke="#d5deea" stroke-opacity=".72" stroke-width="2.5"/><path d="M150 19 V76" stroke="#0b111b" stroke-width="2" opacity=".8"/><path d="M150 19 V76" stroke="#dbe5f2" stroke-width="1" opacity=".55"/><rect x="143" y="31" width="14" height="27" rx="6" fill="#111a27" stroke="#8798ae" stroke-width="1.5"/><path d="M150 77 V121" stroke="#111a27" stroke-width="2" opacity=".6"/><path d="M85 91 Q150 78 215 91" fill="none" stroke="#ffffff" stroke-opacity=".13" stroke-width="2"/><circle cx="150" cy="67" r="3" fill="${m.accent}"/></svg><small>${m.weight} g · ${m.shape}</small></div>`;
+}
+function mousePhoto(m){return `<div class="mouse-photo-wrap"><img class="mouse-product-photo" src="${m.img}" alt="${m.name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div hidden>${mouseArt(m)}</div></div>`;}
+function mouseCard(m){return `<article class="card"><div class="card-img">${mousePhoto(m)}</div><div class="card-body"><div class="brand">${m.brand.toUpperCase()} · ${m.connection.toUpperCase()}</div><h3>${m.name}</h3><p>${m.desc}</p><div class="tags"><span>${m.weight} g</span><span>${m.shape}</span><span>${m.sensor}</span></div><div class="card-actions"><a class="btn secondary" href="${m.url}" target="_blank" rel="noopener">VER FABRICANTE ↗</a><button class="btn outline" onclick="pickMouseCompare('${m.id}')">COMPARAR</button></div></div></article>`}
+function renderMice(){
+ const q=(document.getElementById('mSearch')?.value||'').toLowerCase();
+ const b=document.getElementById('mBrand')?.value||'all';
+ const w=document.getElementById('mWeight')?.value||'all';
+ const c=document.getElementById('mConnection')?.value||'all';
+ const arr=M.filter(m=>(m.name+' '+m.brand+' '+m.sensor).toLowerCase().includes(q)&&(b==='all'||m.brand===b)&&(w==='all'||(w==='ultra'?m.weight<50:w==='light'?m.weight>=50&&m.weight<=60:m.weight>60))&&(c==='all'||m.connection===c));
+ document.getElementById('mCounter').textContent=`${arr.length} ratones mostrados · ${M.length} en el catálogo`;
+ document.getElementById('mouseCards').innerHTML=arr.map(mouseCard).join('')||'<p class="note">No se encontraron ratones con esos filtros.</p>';
+}
+['mSearch','mBrand','mWeight','mConnection'].forEach(id=>document.getElementById(id).addEventListener('input',renderMice));
+['mBrand','mWeight','mConnection'].forEach(id=>document.getElementById(id).addEventListener('change',renderMice));
+
+function keyboardArt(k){
+ const rows=[13,13,12,11]; let keys='';
+ rows.forEach((n,r)=>{for(let i=0;i<n;i++){let x=30+i*25+(r*5),y=35+r*27;keys+=`<rect x="${x}" y="${y}" width="21" height="20" rx="3" fill="#263447" stroke="#53657c" stroke-width="1"/>`;}});
+ return `<div class="kb-illustration"><svg viewBox="0 0 390 180" role="img" aria-label="Ilustración de teclado ${k.name}"><defs><linearGradient id="g${k.id}" x1="0" x2="1"><stop stop-color="${k.accent}"/><stop offset="1" stop-color="#f5f7fb"/></linearGradient></defs><path d="M18 22 Q18 12 30 12 H360 Q372 12 372 24 V151 Q372 164 360 164 H30 Q18 164 18 151Z" fill="#111a27" stroke="url(#g${k.id})" stroke-width="3"/>${keys}<rect x="115" y="144" width="160" height="9" rx="4" fill="${k.accent}" opacity=".8"/><text x="195" y="177" text-anchor="middle" font-size="8" fill="#b7c4d5">${k.size} · ROCKET KEYBOARD LAB</text></svg></div>`;
+}
+function keyboardCard(k){return `<article class="card"><div class="card-img">${photo(k.img,k.name,"keyboard-photo",keyboardArt(k))}</div><div class="card-body"><div class="brand">${k.brand.toUpperCase()}</div><h3>${k.name}</h3><p>${k.desc}</p><div class="tags"><span>${k.size}</span><span>${k.switch}</span><span>${k.rapid==='Sí'?'Rapid Trigger':'Sin Rapid Trigger'}</span></div><div class="card-actions"><button class="btn secondary" onclick="showKeyboard('${k.id}')">DETALLES</button><button class="btn outline" onclick="pickKeyboardCompare('${k.id}')">COMPARAR</button></div></div></article>`}
+function renderKeyboards(){let q=(document.getElementById('kSearch')?.value||'').toLowerCase(),b=document.getElementById('kBrand')?.value||'all',z=document.getElementById('kSize')?.value||'all',sw=document.getElementById('kSwitch')?.value||'all';let a=K.filter(k=>(k.name+' '+k.brand).toLowerCase().includes(q)&&(b==='all'||k.brand===b)&&(z==='all'||k.size===z)&&(sw==='all'||k.switch===sw));document.getElementById('kCounter').textContent=`${a.length} teclados mostrados · ${K.length} en el catálogo`;document.getElementById('keyboardCards').innerHTML=a.map(keyboardCard).join('')||'<p class="note">No se encontraron teclados con esos filtros.</p>';}
+function renderKeyboardSwitchGuide(){
+ const host=document.getElementById('keyboardSwitchGuide');
+ if(!host)return;
+ const descriptions={
+  'Magnético (Hall Effect)':'Switch magnético: detecta la posición de la tecla mediante un sensor Hall Effect. En este modelo el catálogo indica compatibilidad con Rapid Trigger.',
+  'Óptico':'Switch óptico: detecta la pulsación mediante luz. La respuesta y el tacto dependen de la variante concreta del fabricante.',
+  'Mecánico':'Switch mecánico: utiliza un mecanismo físico. Puede haber variantes lineales, táctiles o clicky y distintas opciones según la versión.'
+ };
+ host.innerHTML=K.map((k,i)=>`<article class="guide"><div class="number">${String(i+1).padStart(2,'0')}</div><h3>${k.name}</h3><p><strong>Tipo de switch:</strong> ${k.switch}</p><p>${descriptions[k.switch]||'Consulta la ficha del fabricante para confirmar la referencia exacta de los switches de esta versión.'}</p><p><strong>Rapid Trigger:</strong> ${k.rapid}. <strong>Formato:</strong> ${k.size}.</p><a href="${k.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a></article>`).join('');
+}
+
+function showKeyboard(id){let k=K.find(x=>x.id===id);if(!k)return;go('keyboards');document.getElementById('kSearch').value=k.name;document.getElementById('kBrand').value='all';document.getElementById('kSize').value='all';document.getElementById('kSwitch').value='all';renderKeyboards();}
+['kSearch','kBrand','kSize','kSwitch'].forEach(id=>document.getElementById(id).addEventListener('input',renderKeyboards));
+
+function go(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.page));
+
+function controllerPhoto(img,name,cls=""){
+ const fallback=`<div class="fallback"><span>🎮</span><small>${name}</small></div>`;
+ if(!img)return fallback;
+ return `<img class="product-photo ${cls}" src="${img}" alt="${name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('.card')?.remove();this.hidden=true;this.nextElementSibling.hidden=true;const c=document.getElementById('counter');if(c)c.textContent=document.querySelectorAll('#catalogCards .card').length+' mandos con imagen disponible'"><div class="fallback" hidden><span>🎮</span><small>${name}</small></div>`;
+}
+function controllerArt(name){
+ const label=String(name||"Mando").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+ return `<div class="kb-illustration controller-illustration"><svg viewBox="0 0 420 210" role="img" aria-label="Ilustración de mando ${label}"><defs><linearGradient id="padg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#536176"/><stop offset="1" stop-color="#171f2c"/></linearGradient></defs><path d="M112 54 Q80 55 66 88 L42 148 Q34 177 62 183 Q82 188 103 165 L130 143 H290 L317 165 Q338 188 358 183 Q386 177 378 148 L354 88 Q340 55 308 54 Z" fill="url(#padg)" stroke="#9aa8ba" stroke-width="5"/><path d="M105 102h48m-24-24v48" stroke="#e8edf4" stroke-width="11" stroke-linecap="round"/><circle cx="292" cy="91" r="10" fill="#ef3340"/><circle cx="319" cy="112" r="10" fill="#ef3340"/><circle cx="265" cy="112" r="10" fill="#ef3340"/><circle cx="292" cy="133" r="10" fill="#ef3340"/><ellipse cx="176" cy="112" rx="18" ry="12" fill="#101722" stroke="#8b9aae" stroke-width="4"/><ellipse cx="244" cy="112" rx="18" ry="12" fill="#101722" stroke="#8b9aae" stroke-width="4"/><rect x="194" y="77" width="32" height="8" rx="4" fill="#d8e0eb" opacity=".8"/></svg><small>${label}</small></div>`;
+}
+function photo(img,name,cls="",fallbackHTML=""){
+ const isKeyboard=cls.includes("keyboard-photo");
+ const fallback=fallbackHTML || (isKeyboard ? `<div class="fallback"><span>⌨️</span><small>${name}</small></div>` : controllerArt(name));
+ if(!img)return `<div class="image-fallback">${fallback}</div>`;
+ const safeName=String(name).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+ const safeImg=String(img).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+ return `<img class="product-photo ${cls}" src="${safeImg}" alt="${safeName}" loading="eager" fetchpriority="high" decoding="async" data-original-src="${safeImg}" onerror="if(!this.dataset.proxyTried){this.dataset.proxyTried='1';this.src='https://images.weserv.nl/?url='+encodeURIComponent(this.dataset.originalSrc); }else{this.onerror=null;this.hidden=true;this.nextElementSibling.hidden=false;}"><div class="image-fallback" hidden>${fallback}</div>`;
+}
+function cardHTML(p){
+ return `<article class="card">
+ <div class="card-img">${controllerPhoto(p.img,p.name)}</div>
+ <div class="card-body">
+ <div class="brand">${p.brand.toUpperCase()} ${p.favorite?" · FAVORITO":""}</div>
+ <h3>${p.name}</h3><p>${p.desc}</p>
+ <div class="tags"><span>Sensor: ${p.sticks}</span><span>${p.back} extras</span><span>${p.range==="basic"?"Básico":p.range==="budget"?"Económico":p.range==="value"?"Calidad-precio":"Prémium"}</span></div>
+ <div class="card-actions"><button class="btn secondary" onclick="showProduct('${p.id}')">DETALLES</button><button class="btn outline" onclick="pickCompare('${p.id}')">COMPARAR</button></div>
+ </div></article>`;
+}
+function renderCatalog(){
+ let s=document.getElementById("search").value.toLowerCase();
+ let b=document.getElementById("brand").value;
+ let pl=document.getElementById("platform").value;
+ let r=document.getElementById("range").value;
+ let f=document.getElementById("feature").value;
+ let arr=P.filter(p=>(p.name+" "+p.brand).toLowerCase().includes(s)&&(b==="all"||p.brand===b)&&(pl==="all"||p.platform.includes(pl))&&(r==="all"||p.range===r)&&(f==="all"||p.features.includes(f)));
+ document.getElementById("counter").textContent=arr.length+" mandos mostrados · "+P.length+" en el catálogo";
+ document.getElementById("catalogCards").innerHTML=arr.map(cardHTML).join("")||'<div class="note">No se han encontrado mandos con esos filtros.</div>';
+}
+["search","brand","platform","range","feature"].forEach(id=>document.getElementById(id).addEventListener("input",renderCatalog));
+
+function showProduct(id){
+ let p=P.find(x=>x.id===id);if(!p)return;
+ go("catalog");
+ document.getElementById("search").value=p.name;
+ document.getElementById("brand").value="all";
+ document.getElementById("platform").value="all";
+ document.getElementById("range").value="all";
+ document.getElementById("feature").value="all";
+ renderCatalog();
+}
+function compareHTML(p){
+ return `<div class="compare-img">${controllerPhoto(p.img,p.name)}</div>
+ <div class="compare-row"><b>Marca</b><span>${p.brand}</span></div>
+ <div class="compare-row"><b>Plataformas</b><span>${p.platform.join(", ")}</span></div>
+ <div class="compare-row"><b>Sensores de sticks</b><span>${p.sticks}</span></div>
+ <div class="compare-row"><b>Botones</b><span>${p.buttons}</span></div>
+ <div class="compare-row"><b>Controles extra</b><span>${p.back}</span></div>
+ <div class="compare-row"><b>Gatillos</b><span>${p.triggers}</span></div>
+ <div class="compare-row"><b>Conexión</b><span>${p.connection}</span></div>
+ <div class="compare-row"><b>Gama</b><span>${p.price}</span></div>
+ <p class="reason">${p.desc}</p><a href="${p.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a>`;
+}
+function fillCompare(){document.getElementById('compareType').value='pad';fillCompareOptions();}
+function fillCompareOptions(){
+ let type=document.getElementById('compareType').value;
+ let arr=type==='keyboard'?K:type==='mouse'?M:P;
+ let label=type==='keyboard'?'TECLADO':type==='mouse'?'RATÓN':'MANDO';
+ let plural=type==='keyboard'?'TECLADOS':type==='mouse'?'RATONES':'MANDOS';
+ document.getElementById('compareTitle').textContent=`COMPARADOR DE ${plural}`;
+ document.getElementById('compareLabelA').textContent=`${label} A`;
+ document.getElementById('compareLabelB').textContent=`${label} B`;
+ ['compareA','compareB'].forEach(id=>document.getElementById(id).innerHTML=arr.map(p=>`<option value="${p.id}">${p.name}</option>`).join(''));
+ document.getElementById('compareA').value=type==='keyboard'?K[0].id:type==='mouse'?M[0].id:'g78k';
+ document.getElementById('compareB').value=type==='keyboard'?K[1].id:type==='mouse'?M[1].id:'g7pro';
+ renderCompare();
+}
+function keyboardCompareHTML(k,includePhoto=true){return `${includePhoto?`<div class="compare-img">${photo(k.img,k.name,"keyboard-photo",keyboardArt(k))}</div>`:""}<div class="compare-row"><b>Marca</b><span>${k.brand}</span></div><div class="compare-row"><b>Formato</b><span>${k.size}</span></div><div class="compare-row"><b>Switch</b><span>${k.switch}</span></div><div class="compare-row"><b>Rapid Trigger</b><span>${k.rapid}</span></div><div class="compare-row"><b>Polling rate anunciado</b><span>${k.polling}</span></div><div class="compare-row"><b>Conexión</b><span>${k.connection}</span></div><div class="compare-row"><b>Gama orientativa</b><span>${k.price}</span></div><p class="reason">${k.desc}</p><a href="${k.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a>`;}
+function mouseCompareHTML(m){return `<div class="compare-img mouse-compare-img">${mousePhoto(m)}</div><div class="compare-row"><b>Marca</b><span>${m.brand}</span></div><div class="compare-row"><b>Peso</b><span>${m.weight} g</span></div><div class="compare-row"><b>Forma</b><span>${m.shape}</span></div><div class="compare-row"><b>Sensor</b><span>${m.sensor}</span></div><div class="compare-row"><b>Polling rate anunciado</b><span>${m.polling}</span></div><div class="compare-row"><b>Conexión</b><span>${m.connection}</span></div><p class="reason">${m.desc}</p><a href="${m.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a>`;}
+function renderCompare(){
+ let type=document.getElementById('compareType').value,aId=document.getElementById('compareA').value,bId=document.getElementById('compareB').value;
+ if(type==='keyboard'){let a=K.find(p=>p.id===aId),b=K.find(p=>p.id===bId);if(a&&b){document.getElementById('detailA').innerHTML=keyboardCompareHTML(a);document.getElementById('detailB').innerHTML=keyboardCompareHTML(b);}}
+ else if(type==='mouse'){let a=M.find(p=>p.id===aId),b=M.find(p=>p.id===bId);if(a&&b){document.getElementById('detailA').innerHTML=mouseCompareHTML(a);document.getElementById('detailB').innerHTML=mouseCompareHTML(b);}}
+ else{let a=P.find(p=>p.id===aId),b=P.find(p=>p.id===bId);if(a&&b){document.getElementById('detailA').innerHTML=compareHTML(a);document.getElementById('detailB').innerHTML=compareHTML(b);}}
+}
+function pickCompare(id){document.getElementById('compareType').value='pad';fillCompareOptions();document.getElementById('compareA').value=id;go('compare');renderCompare();}
+function pickKeyboardCompare(id){document.getElementById('compareType').value='keyboard';fillCompareOptions();document.getElementById('compareA').value=id;go('compare');renderCompare();}
+function pickMouseCompare(id){document.getElementById('compareType').value='mouse';fillCompareOptions();document.getElementById('compareA').value=id;go('compare');renderCompare();}
+document.getElementById('compareType').onchange=fillCompareOptions;document.getElementById('compareA').onchange=renderCompare;document.getElementById('compareB').onchange=renderCompare;
+
+const DEVICEQ={key:'device',title:'¿Qué equipo quieres recomendar?',desc:'Puedes buscar un mando o un conjunto completo de teclado y ratón.',opts:[['pad','🎮','Mando','Quiero encontrar el mando ideal.'],['combo','⌨️🖱️','Teclado y ratón','Quiero que me recomiendes un pack de ambos.']]};
+const KQ=[
+{key:'kbudget',title:'¿Qué presupuesto tienes?',desc:'Elige la gama que encaja con lo que quieres gastar.',opts:[['budget','💶','Económico','Busco gastar lo mínimo.'],['value','💳','Calidad-precio','Quiero equilibrio.'],['premium','💎','Prémium','Busco funciones avanzadas.']]},
+{key:'ksize',title:'¿Qué tamaño prefieres?',desc:'El formato cambia el espacio que ocupa y las teclas disponibles.',opts:[['compact','60% / 65%','Compacto','Más espacio para el ratón.'],['75','75%','75%','Compacto, con teclas de función.'],['tkl','TKL','TKL / 80%','Sin teclado numérico.'],['full','100% / 96%','Completo','Quiero teclado numérico.']]},
+{key:'kswitch',title:'¿Qué tipo de switch prefieres?',desc:'Los magnéticos ofrecen ajustes de actuación y Rapid Trigger en modelos compatibles.',opts:[['mag','🧲','Magnético / Hall Effect','Me interesan Rapid Trigger y actuación ajustable.'],['optical','⚡','Óptico','Quiero respuesta rápida.'],['mechanical','⌨️','Mecánico','Prefiero el tacto mecánico tradicional.'],['any','🔀','Me da igual','Que el test lo valore.']]},
+{key:'krapid',title:'¿Quieres Rapid Trigger?',desc:'Esta función permite reajustar rápidamente el punto de activación al soltar una tecla.',opts:[['yes','🚀','Sí, lo quiero','Es una prioridad para jugar competitivo.'],['maybe','🤔','Me interesa','Si entra en el presupuesto.'],['no','➖','No es necesario','Prefiero otras características.']]},
+{key:'kgame',title:'¿Para qué lo vas a usar?',desc:'Elige el uso principal.',opts:[['competitive','🏆','Competitivo','Fortnite, shooters y juegos rápidos.'],['mixed','🎮','Uso mixto','Jugar y escribir a diario.'],['casual','🌙','Casual','Juego por diversión.']]},
+{key:'kconnection',title:'¿Qué conexión prefieres?',desc:'El cable evita cargar batería; inalámbrico aporta flexibilidad.',opts:[['wired','🔌','Con cable','Prioridad a conexión directa.'],['wireless','📡','Inalámbrico','Quiero libertad de movimiento.'],['any','🔀','Me da igual','Cualquiera me sirve.']]}
+];
+
+const MQ=[
+{key:'mweight',title:'¿Qué peso prefieres en el ratón?',desc:'Un ratón ligero puede facilitar movimientos rápidos, pero la comodidad y el control también importan.',opts:[['under50','🪶','Menos de 50 g','Quiero que sea muy ligero.'],['50to60','⚖️','Entre 50 y 60 g','Busco un peso equilibrado.'],['any','🔀','Me da igual','Prioriza la forma y el rendimiento.']]},
+{key:'mshape',title:'¿Qué forma te resulta más cómoda?',desc:'La forma depende de tu mano y de cómo sujetas el ratón.',opts:[['sym','↔️','Simétrico','Me gusta una forma equilibrada.'],['ergo','🤚','Ergonómico','Prefiero apoyo para la mano derecha.'],['any','🔀','No lo sé','Que el test lo valore.']]},
+{key:'mconnection',title:'¿Qué conexión quieres?',desc:'Los modelos inalámbricos actuales también están pensados para jugar competitivo.',opts:[['wireless','📡','Inalámbrico','Quiero un escritorio limpio.'],['wired','🔌','Con cable','Prefiero no cargar batería.'],['any','🔀','Me da igual','La que mejor encaje.']]},
+{key:'mhand',title:'¿Qué tamaño de ratón sueles preferir?',desc:'Si no lo sabes, elige la opción intermedia.',opts:[['small','🤏','Pequeño / compacto','Me gustan los ratones cortos.'],['medium','👌','Mediano','Busco un tamaño equilibrado.'],['large','✋','Grande','Prefiero que llene más la mano.'],['any','🔀','No lo sé','Que el test lo valore.']]}
+];
+function questionList(){return ans.device==='combo'?[...KQ,...MQ]:Q;}
+
+const Q=[
+{key:"platform",title:"¿Dónde juegas?",desc:"Elige tu plataforma principal.",opts:[["PC","🖥️","PC","Juego en ordenador."],["Xbox","🟩","Xbox","Juego en Xbox."],["PS5","🔵","PlayStation 5","Juego en PS5."],["PS4","🔵","PlayStation 4","Juego en PS4."],["Switch","🔴","Nintendo Switch","Juego en Switch."]]},
+{key:"level",title:"¿Cuál es tu nivel?",desc:"Queremos adaptar la recomendación a tu experiencia.",opts:[["casual","🎮","Casual","Juego para divertirme."],["advanced","⚡","Avanzado","Tengo experiencia y buenas mecánicas."],["competitive","🏆","Competitivo","Juego rankeds y torneos."]]},
+{key:"style",title:"¿Cómo juegas?",desc:"Elige el estilo que más se parece a ti.",opts:[["aggressive","🔥","Agresivo","Busco peleas y presiono."],["smart","🧠","Estratégico","Pienso las jugadas."],["balanced","⚖️","Equilibrado","Me adapto a cada situación."]]},
+{key:"priority",title:"¿Qué valoras más?",desc:"Puedes elegir hasta dos prioridades.",multi:true,max:2,opts:[["aim","🎯","Aim","Control fino del stick."],["mechanics","⚡","Mecánicas","Ediciones y construcciones."],["comfort","🤲","Comodidad","Agarre y ergonomía."],["response","🚀","Respuesta","Botones y gatillos rápidos."]]},
+{key:"paddles",title:"¿Cuántos controles extra quieres?",desc:"Piensa en cuántos usarías realmente.",opts:[["none","➖","Ninguno","No los necesito."],["two","2️⃣","Dos","Con dos me basta."],["four","4️⃣","Cuatro o más","Quiero varios controles extra."]]},
+{key:"buttons",title:"¿Qué tacto prefieres?",desc:"No hay una respuesta mejor: depende de tus gustos.",opts:[["mechanical","⌨️","Mecánicos","Clic marcado y definido."],["membrane","☁️","Membrana","Pulsación más suave."],["any","🔀","Me da igual","Me adapto a ambos."]]},
+{key:"sticks",title:"¿Qué sticks prefieres?",desc:"Puedes elegir que no tienes preferencia.",opts:[["tmr","🧲","TMR","Tecnología magnética TMR."],["hall","🧲","Hall Effect","Tecnología magnética Hall."],["any","❔","No lo sé","Que el test lo valore."]]},
+{key:"budget",title:"¿Qué presupuesto tienes?",desc:"La gama es orientativa, no un precio en tiempo real.",opts:[["basic","💶","Básico / económico","Quiero gastar poco."],["value","💳","Calidad-precio","Busco equilibrio."],["premium","💎","Prémium","Quiero funciones avanzadas."]]}
+];
+let ans={},step=0;
+function drawQ(){
+ let list=questionList();let q=step===0?DEVICEQ:list[step-1],v=ans[q.key]||(q.multi?[]:null);
+ document.getElementById("stepCount").textContent=`PREGUNTA ${step+1} DE ${list.length+1}`;
+ document.getElementById("percent").textContent=Math.round((step+1)/(list.length+1)*100)+"%";
+ document.getElementById("progressBar").style.width=(step+1)/(list.length+1)*100+"%";
+ document.getElementById("questionArea").innerHTML=`<div class="step">PASO ${String(step+1).padStart(2,"0")} / ${String(list.length+1).padStart(2,"0")}</div><h3 class="question">${q.title}</h3><p class="desc">${q.desc}</p><div class="options" id="opts"></div>`;
+ q.opts.forEach(o=>{
+  let selected=q.multi?v.includes(o[0]):v===o[0];
+  let bt=document.createElement("button");bt.className="option"+(selected?" selected":"");
+  bt.innerHTML=`<span class="ico">${o[1]}</span><span><strong>${o[2]}</strong><small>${o[3]}</small></span>`;
+  bt.onclick=()=>pick(q,o[0]);document.getElementById("opts").appendChild(bt);
+ });
+ document.getElementById("back").disabled=step===0;
+ document.getElementById("next").disabled=q.multi?!v.length:!v;
+ document.getElementById("next").textContent=step===list.length?"VER RESULTADO →":"CONTINUAR →";
+}
+function pick(q,val){
+ if(q.multi){let a=ans[q.key]||[];if(a.includes(val))ans[q.key]=a.filter(x=>x!==val);else if(a.length<q.max)ans[q.key]=[...a,val]}
+ else ans[q.key]=val;
+ drawQ();
+}
+document.getElementById("back").onclick=()=>{if(step>0){step--;drawQ()}};
+document.getElementById("next").onclick=()=>{let n=questionList().length+1;if(step<n-1){step++;drawQ()}else results()};
+
+function getScore(p){
+ if(!p.platform.includes(ans.platform))return -1;
+ let score=35;
+ let need={none:0,two:2,four:4}[ans.paddles];
+ score+=ans.paddles==="none"?(p.back===0?12:7):(p.back>=need?15:4);
+ if(ans.buttons==="any")score+=9;
+ else if((ans.buttons==="mechanical"&&p.features.includes("mechanical"))||(ans.buttons==="membrane"&&p.buttons.toLowerCase().includes("membrana")))score+=13;
+ else score+=3;
+ if(ans.sticks==="any")score+=9;
+ else if((ans.sticks==="tmr"&&p.features.includes("tmr"))||(ans.sticks==="hall"&&p.features.includes("hall")))score+=13;
+ else score+=3;
+ let priorities=ans.priority||[];
+ if(priorities.includes("aim")&&(p.features.includes("tmr")||p.features.includes("hall")))score+=5;
+ if(priorities.includes("mechanics")&&p.back>=2)score+=5;
+ if(priorities.includes("response")&&p.features.includes("mechanical"))score+=5;
+ if(priorities.includes("comfort"))score+=4;
+ if(ans.budget==="basic"&&(p.range==="basic"||p.range==="budget"))score+=10;
+ if(ans.budget==="value"&&p.range==="value")score+=10;
+ if(ans.budget==="premium"&&p.range==="premium")score+=10;
+ if(ans.level==="competitive"&&p.back>=2)score+=4;
+ return Math.min(99,Math.round(score/1.15));
+}
+function keyboardScore(k){
+ let score=35;
+ if(ans.kbudget==='budget'&&k.price==='Económico')score+=18;
+ else if(ans.kbudget==='value'&&k.price==='Calidad-precio')score+=15;
+ else if(ans.kbudget==='premium'&&k.price==='Prémium')score+=15;
+ let sizeMatch=ans.ksize==='compact'?['60%','65%'].includes(k.size):ans.ksize==='75'?k.size==='75%':ans.ksize==='tkl'?k.size==='TKL (80%)':['96%','100%'].includes(k.size);
+ score+=sizeMatch?18:4;
+ if(ans.kswitch==='mag'&&k.switch.includes('Magnético'))score+=17;
+ else if(ans.kswitch==='optical'&&k.switch==='Óptico')score+=15;
+ else if(ans.kswitch==='mechanical'&&k.switch==='Mecánico')score+=15;
+ else if(ans.kswitch==='any')score+=9;
+ if(ans.krapid==='yes'&&k.rapid==='Sí')score+=12;else if(ans.krapid==='no'&&k.rapid==='No')score+=7;else if(ans.krapid==='maybe')score+=6;
+ if(ans.kgame==='competitive'&&k.rapid==='Sí')score+=5;
+ if(ans.kconnection==='wired'&&k.connection.toLowerCase().includes('usb'))score+=5;
+ else if(ans.kconnection==='wireless'&&(k.connection.includes('2.4')||k.connection.toLowerCase().includes('bluetooth')))score+=5;
+ return Math.min(99,score);
+}
+
+function mouseScore(m){
+ let score=42;
+ if(ans.mweight==='under50')score+=m.weight<50?22:(m.weight<=60?12:2);
+ else if(ans.mweight==='50to60')score+=m.weight>=50&&m.weight<=60?20:(m.weight<50?12:5);
+ else score+=10;
+ if(ans.mshape==='sym')score+=m.shape.toLowerCase().includes('sim')?18:4;
+ else if(ans.mshape==='ergo')score+=m.shape.toLowerCase().includes('ergo')?18:4;
+ else score+=10;
+ if(ans.mconnection==='wireless')score+=m.connection==='Inalámbrico'?12:3;
+ else if(ans.mconnection==='wired')score+=m.connection==='Cable'?12:3;
+ else score+=8;
+ if(ans.mhand==='small')score+=m.shape.toLowerCase().includes('compact')||m.shape.toLowerCase().includes('peque')?8:(m.weight<55?5:0);
+ else if(ans.mhand==='large')score+=m.shape.toLowerCase().includes('ergo')?8:(m.weight>=55?5:0);
+ else if(ans.mhand==='medium')score+=8;
+ else score+=5;
+ if(ans.kbudget==='budget')score+=m.tier==='value'?10:2;
+ else if(ans.kbudget==='value')score+=m.tier==='value'?8:5;
+ else score+=m.tier==='premium'?10:4;
+ return Math.min(99,Math.round(score/1.12));
+}
+function combinedResults(){
+ const keyboards=K.map(k=>({k,s:keyboardScore(k)})).sort((a,b)=>b.s-a.s);
+ const mice=M.map(m=>({m,s:mouseScore(m)})).sort((a,b)=>b.s-a.s);
+ const pairs=[];
+ keyboards.forEach(k=>mice.forEach(m=>pairs.push({k:k.k,m:m.m,s:Math.round((k.s+m.s)/2),ks:k.s,ms:m.s})));
+ pairs.sort((a,b)=>b.s-a.s);
+ const best=pairs[0];
+ document.getElementById('quizArea').style.display='none';document.getElementById('results').style.display='block';
+ document.getElementById('resultIntro').textContent=`Tu pack recomendado combina ${best.k.name} con ${best.m.name}. La puntuación compara tus preferencias con las características de cada producto.`;
+ document.getElementById('bestResult').innerHTML=`<article class="result-card best"><div class="brand">TU PACK RECOMENDADO · ${best.s}% DE COINCIDENCIA</div><div class="combo-result-grid"><section><div class="eyebrow">TECLADO · ${best.ks}%</div><h3>${best.k.name}</h3><div class="result-photo keyboard-result-art">${photo(best.k.img,best.k.name,"keyboard-photo",keyboardArt(best.k))}</div><p class="reason">${best.k.desc}</p><a href="${best.k.url}" target="_blank" rel="noopener">VER TECLADO ↗</a></section><section><div class="eyebrow">RATÓN · ${best.ms}%</div><h3>${best.m.name}</h3><div class="result-photo">${mousePhoto(best.m)}</div><p class="reason">${best.m.desc}</p><a href="${best.m.url}" target="_blank" rel="noopener">VER RATÓN ↗</a><div class="tags"><span>${best.m.weight} g</span><span>${best.m.shape}</span><span>${best.m.connection}</span></div></section></div></article>`;
+ document.getElementById('alternatives').innerHTML=pairs.slice(1,6).map(x=>`<article class="result-card"><div class="brand">PACK ALTERNATIVO · ${x.s}%</div><h3>${x.k.name} + ${x.m.name}</h3><div class="combo-result-grid"><section><div class="result-photo keyboard-result-art">${photo(x.k.img,x.k.name,"keyboard-photo",keyboardArt(x.k))}</div><small>TECLADO</small><p>${x.k.desc}</p><a href="${x.k.url}" target="_blank" rel="noopener">VER TECLADO ↗</a></section><section><div class="result-photo">${mousePhoto(x.m)}</div><small>RATÓN · ${x.m.weight} g</small><p>${x.m.desc}</p><a href="${x.m.url}" target="_blank" rel="noopener">VER RATÓN ↗</a></section></div></article>`).join('');
+}
+
+function results(){
+ if(ans.device==='combo'){combinedResults();return;}
+ if(ans.device==='keyboard'){ 
+  let ranked=K.map(p=>({p,s:keyboardScore(p)})).sort((a,b)=>b.s-a.s);
+  document.getElementById('quizArea').style.display='none';document.getElementById('results').style.display='block';
+  let best=ranked[0];
+  document.getElementById('resultIntro').textContent=`Tu mejor coincidencia es ${best.p.name}. La puntuación compara tus respuestas con las características registradas; no garantiza mejores resultados en el juego.`;
+  document.getElementById('bestResult').innerHTML=`<article class="result-card best"><div class="brand">MEJOR COINCIDENCIA · TECLADO</div><h3>${best.p.name}</h3><div class="result-photo keyboard-result-art">${photo(best.p.img,best.p.name,"keyboard-photo",keyboardArt(best.p))}</div><div class="score">${best.s}%</div><div class="meter"><div style="width:${best.s}%"></div></div><p class="reason">${best.p.desc}</p>${keyboardCompareHTML(best.p,false)}</article>`;
+  document.getElementById('alternatives').innerHTML=ranked.slice(1,6).map(x=>`<article class="result-card"><div class="brand">${x.s}% DE COINCIDENCIA</div><h3>${x.p.name}</h3><div class="result-photo keyboard-result-art">${photo(x.p.img,x.p.name,"keyboard-photo",keyboardArt(x.p))}</div><p class="reason">${x.p.desc}</p><a href="${x.p.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a></article>`).join('');
+  return;
+ }
+ let ranked=P.map(p=>({p,s:getScore(p)})).filter(x=>x.s>=0).sort((a,b)=>b.s-a.s);
+ document.getElementById("quizArea").style.display="none";
+ document.getElementById("results").style.display="block";
+ if(!ranked.length){document.getElementById("resultIntro").textContent="No hay modelos compatibles con esa plataforma en el catálogo.";return}
+ let best=ranked[0];
+ document.getElementById("resultIntro").textContent=`Tu mejor coincidencia es ${best.p.name}. La puntuación compara tus preferencias con las características registradas. No mide tu habilidad ni garantiza mejores resultados.`;
+ document.getElementById("bestResult").innerHTML=`<article class="result-card best"><div class="brand">MEJOR COINCIDENCIA</div><h3>${best.p.name}</h3><div class="result-photo">${controllerPhoto(best.p.img,best.p.name)}</div><div class="score">${best.s}%</div><div class="meter"><div style="width:${best.s}%"></div></div><p class="reason">${best.p.desc}</p>${compareHTML(best.p)}</article>`;
+ document.getElementById("alternatives").innerHTML=ranked.slice(1,6).map(x=>`<article class="result-card"><div class="brand">${x.s}% DE COINCIDENCIA</div><h3>${x.p.name}</h3><p class="reason">${x.p.desc}</p><a href="${x.p.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a></article>`).join("");
+}
+function restart(){ans={};step=0;document.getElementById("quizArea").style.display="grid";document.getElementById("results").style.display="none";drawQ()}
+
+renderCatalog();
+renderKeyboards();
+renderKeyboardSwitchGuide();
+fillCompare();
+drawQ();
+
+renderMice();
+</script>
+</body>
+</html>
