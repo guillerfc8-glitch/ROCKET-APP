@@ -142,6 +142,13 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
 #mouseCards .card-img{background:#0b1018}
 
 
+
+.mp-photo-wrap{width:100%;height:100%;min-height:170px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f5f6f8;border-radius:8px;padding:10px}
+.mp-product-photo{display:block;width:100%;height:180px;max-height:190px;object-fit:contain;object-position:center}
+.mp-photo-fallback{display:none;color:#172033;font-size:12px;font-weight:800;text-align:center}
+.mp-image-error .mp-photo-fallback{display:block}
+.mp-compare-photo{margin-bottom:12px}
+.result-card .mp-photo-wrap{height:190px;margin:12px 0}
 .mouse-photo-wrap{width:100%;height:100%;min-height:155px;display:grid;place-items:center;background:radial-gradient(circle,#273547,#0b1018 75%);border-radius:8px;overflow:hidden}
 .mouse-product-photo{width:100%;height:100%;min-height:155px;max-height:190px;object-fit:contain;object-position:center;display:block;padding:8px;box-sizing:border-box}
 .mouse-photo-wrap [hidden]{display:none!important}
@@ -166,6 +173,7 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
   <button data-page="catalog">MANDOS</button>
    <button data-page="keyboards">TECLADOS</button>
   <button data-page="mice">RATONES</button>
+   <button data-page="mousepads">MOUSEPADS</button>
   <button data-page="compare">COMPARAR</button>
   <button data-page="test">TEST</button>
   <button data-page="guide">GUÍA</button>
@@ -209,8 +217,8 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
   <div class="guide-grid">
    <article class="guide"><div class="number">01</div><h3>Catálogo completo</h3><p>Explora mandos básicos, económicos, calidad-precio y prémium.</p><button class="btn secondary" onclick="go('catalog')">ENTRAR →</button></article>
    <article class="guide"><div class="number">02</div><h3>Catálogo de teclados</h3><p>Explora formatos compactos, TKL y completos, con opciones magnéticas y mecánicas.</p><button class="btn secondary" onclick="go('keyboards')">VER TECLADOS →</button></article>
-    <article class="guide"><div class="number">03</div><h3>Comparador</h3><p>Compara dos dispositivos del mismo tipo y descubre sus diferencias.</p><button class="btn secondary" onclick="go('compare')">COMPARAR →</button></article>
-   <article class="guide"><div class="number">04</div><h3>Recomendador</h3><p>Encuentra un mando según tu estilo y tus preferencias.</p><button class="btn primary" onclick="go('test')">HACER TEST →</button></article>
+    <article class="guide"><div class="number">03</div><h3>Mousepads</h3><p>20 superficies: desde control para sensibilidad baja hasta opciones rápidas y glasspads.</p><button class="btn secondary" onclick="go('mousepads')">VER MOUSEPADS →</button></article><article class="guide"><div class="number">04</div><h3>Comparador</h3><p>Compara dos dispositivos del mismo tipo y descubre sus diferencias.</p><button class="btn secondary" onclick="go('compare')">COMPARAR →</button></article>
+   <article class="guide"><div class="number">05</div><h3>Recomendador</h3><p>Encuentra un mando según tu estilo y tus preferencias.</p><button class="btn primary" onclick="go('test')">HACER TEST →</button></article>
   </div>
  </div>
 </section>
@@ -297,11 +305,26 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
  </div>
 </section>
 
+<!-- CATÁLOGO DE MOUSEPADS -->
+<section class="page" id="mousepads">
+ <div class="section">
+  <div class="heading"><div><div class="eyebrow">MOUSEPAD DATABASE · CONTROL & SPEED</div><h2>CATÁLOGO DE MOUSEPADS</h2></div><p>20 superficies seleccionadas: 5 glasspads y 15 alfombrillas textiles o híbridas. La velocidad es orientativa; también depende de los patines del ratón, la presión y el desgaste. Las tarjetas muestran fotografías del producto real.</p></div>
+  <div class="tools">
+   <input class="search" id="mpSearch" placeholder="Buscar modelo, marca o tipo...">
+   <select class="filter" id="mpMaterial"><option value="all">Todos los materiales</option><option value="Cristal">Cristal</option><option value="Tela">Tela</option><option value="Híbrido">Híbrido</option></select>
+   <select class="filter" id="mpSpeed"><option value="all">Cualquier velocidad</option><option value="Control">Control / lento</option><option value="Equilibrado">Equilibrado</option><option value="Rápido">Rápido</option><option value="Muy rápido">Muy rápido</option></select>
+   <select class="filter" id="mpBudget"><option value="all">Todos los precios</option><option value="budget">Económicos</option><option value="value">Calidad-precio</option><option value="premium">Prémium</option></select>
+  </div>
+  <div class="counter" id="mpCounter"></div><div class="cards" id="mousepadCards"></div>
+  <p class="note">Importante: un glasspad no es automáticamente mejor. Suele deslizar mucho, ofrece menos fricción de frenado, puede ser más ruidoso y requiere mantener la superficie limpia. Si tienes sensibilidad alta, quizá te resulte demasiado rápido. Para empezar, una superficie equilibrada suele ser más fácil de controlar.</p>
+ </div>
+</section>
+
 <!-- COMPARADOR -->
 <section class="page" id="compare">
  <div class="section">
   <div class="heading"><div><div class="eyebrow">HEAD TO HEAD</div><h2 id="compareTitle">COMPARADOR DE MANDOS</h2></div><p>Escoge el tipo de producto y compara dos modelos.</p></div>
-  <div class="tools"><select class="filter" id="compareType"><option value="pad">Comparar mandos</option><option value="keyboard">Comparar teclados</option><option value="mouse">Comparar ratones</option></select></div>
+  <div class="tools"><select class="filter" id="compareType"><option value="pad">Comparar mandos</option><option value="keyboard">Comparar teclados</option><option value="mouse">Comparar ratones</option><option value="mousepad">Comparar mousepads</option></select></div>
   <div class="compare-layout">
    <div class="compare-box"><h3 id="compareLabelA">MANDO A</h3><select class="filter" id="compareA"></select><div id="detailA"></div></div>
    <div class="compare-box"><h3 id="compareLabelB">MANDO B</h3><select class="filter" id="compareB"></select><div id="detailB"></div></div>
@@ -312,7 +335,7 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
 <!-- TEST -->
 <section class="page" id="test">
  <div class="section">
-  <div class="heading"><div><div class="eyebrow">PERSONAL CONTROLLER MATCH</div><h2>ENCUENTRA TU EQUIPO</h2></div><p>Elige mando o teclado y ratón. Si eliges el pack, recibirás dos recomendaciones compatibles con tus preferencias.</p></div>
+  <div class="heading"><div><div class="eyebrow">PERSONAL CONTROLLER MATCH</div><h2>ENCUENTRA TU EQUIPO</h2></div><p>Elige mando, teclado y ratón, o mousepad. El test adapta las preguntas a lo que quieras recomendar.</p></div>
   <div class="quiz-layout" id="quizArea">
    <div class="panel">
     <div class="progress-head"><span id="stepCount">PREGUNTA 1 DE 8</span><span id="percent">13%</span></div>
@@ -373,6 +396,22 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
    <article class="guide"><div class="number">08</div><h3>Patines (skates)</h3><p>Son las piezas de PTFE u otros materiales que rozan con la alfombrilla. Su forma, grosor y superficie cambian el deslizamiento. Unos patines grandes suelen repartir mejor el contacto; la sensación final depende también de la alfombrilla.</p></article>
    <article class="guide"><div class="number">09</div><h3>Debounce y clics</h3><p>En algunos ratones el debounce ayuda a evitar registros dobles no deseados. Un ajuste demasiado bajo puede provocar clics fantasma en ciertos interruptores; no hace falta ponerlo al mínimo si el ratón ya funciona bien.</p></article>
    <article class="guide"><div class="number">10</div><h3>Forma de agarre</h3><p>En agarre palm la mano descansa sobre el ratón; en claw los dedos quedan arqueados; en fingertip se controla principalmente con las yemas. No hay un agarre universalmente mejor: elige el que te resulte natural y cómodo.</p></article>
+  </div>
+  <div class="heading" style="margin-top:34px"><div><div class="eyebrow">MOUSEPAD KNOWLEDGE</div><h2>GUÍA DE SUPERFICIES</h2></div><p>La alfombrilla cambia cómo arranca y se detiene el ratón. No hay una velocidad perfecta para todo el mundo.</p></div>
+  <div class="guide-grid">
+   <article class="guide"><div class="number">01</div><h3>Mousepad de control</h3><p>Su superficie ofrece más resistencia al movimiento y ayuda a detener el ratón. Es útil si buscas estabilidad, haces ajustes pequeños o notas que el ratón se te escapa al apuntar.</p></article>
+   <article class="guide"><div class="number">02</div><h3>Mousepad equilibrado</h3><p>Combina un deslizamiento fluido con un frenado suficiente. Es un buen punto de partida si todavía no sabes qué tipo de superficie prefieres.</p></article>
+   <article class="guide"><div class="number">03</div><h3>Mousepad Speed</h3><p>Está pensado para que el ratón se deslice con poca resistencia. Puede gustar si haces movimientos rápidos o amplios, aunque requiere controlar bien el frenado.</p></article>
+   <article class="guide"><div class="number">04</div><h3>Mousepad de tela</h3><p>Es el tipo más habitual. Suele ser flexible, cómodo y fácil de enrollar. Hay telas lentas, equilibradas y rápidas: que sea de tela no significa que siempre sea de control.</p></article>
+   <article class="guide"><div class="number">05</div><h3>Mousepad híbrido</h3><p>Mezcla características de las superficies textiles y rápidas. Algunos modelos tienen una textura más marcada y deslizan más que una tela de control, sin ser necesariamente tan rápidos como el cristal.</p></article>
+   <article class="guide"><div class="number">06</div><h3>Glasspad / cristal</h3><p>Es una superficie rígida de cristal templado. Suele ser muy rápida y fácil de limpiar, pero es más dura, puede hacer más ruido y necesita una adaptación. También conviene mantenerla limpia.</p></article>
+   <article class="guide"><div class="number">07</div><h3>Cordura y tejidos resistentes</h3><p>La Cordura es un tejido sintético resistente que se usa en algunos mousepads rápidos. Suele soportar bien el uso diario y puede ofrecer un deslizamiento más vivo que una tela clásica.</p></article>
+   <article class="guide"><div class="number">08</div><h3>Fricción inicial y dinámica</h3><p>La fricción inicial es la fuerza que notas al empezar a mover el ratón. La dinámica es la resistencia mientras ya se está deslizando. Dos mousepads igual de rápidos pueden sentirse distintos al arrancar y frenar.</p></article>
+   <article class="guide"><div class="number">09</div><h3>Base de goma, espuma o Poron</h3><p>La parte inferior evita que la alfombrilla se mueva. La firmeza y el grosor también cambian el apoyo: una base blanda puede comprimirse al presionar y modificar el frenado.</p></article>
+   <article class="guide"><div class="number">10</div><h3>Bordes cosidos</h3><p>Los bordes cosidos ayudan a reducir el desgaste de la tela. Es importante que la costura no sobresalga demasiado ni moleste al apoyar la muñeca o el antebrazo.</p></article>
+   <article class="guide"><div class="number">11</div><h3>Tamaño y espacio</h3><p>Los tamaños habituales van desde pequeños hasta XL y XXL. Con sensibilidad baja o movimientos amplios suele venir bien más superficie. Comprueba que quepan el ratón y el teclado en tu escritorio.</p></article>
+   <article class="guide"><div class="number">12</div><h3>Limpieza y mantenimiento</h3><p>El polvo, el sudor y la suciedad pueden cambiar el deslizamiento. Limpia la superficie siguiendo las indicaciones del fabricante y evita productos fuertes, sobre todo en los glasspads.</p></article>
+  </div>
   </div>
  </div>
 </section>
@@ -504,6 +543,69 @@ const MOUSE_IMAGES={
 };
 const MOUSE_TIERS={'gpxs2':'premium','logitech-pro2':'premium','gpxs2dex':'premium','viper-v3-pro':'premium','deathadder-v4-pro':'premium','deathadder-v3-hs':'value','pulsar-x2v2':'premium','pulsar-x2h':'premium','pulsar-xlite-v4':'premium','lamzu-maya-x':'premium','lamzu-atlantis-mini':'premium','endgame-op1-8k':'value','hyperx-haste2':'value','atk-a9plus':'value','razer-viper-v3-hyperspeed':'value','mchose-a7v2pro':'value','ajazz-aj159pro':'value','scyrox-v8':'premium','ninjutso-sora-v2':'premium','zowie-u2-dw':'premium','attack-shark-x8-se-pink':'value'};
 M.forEach(m=>{m.img=MOUSE_IMAGES[m.id]||'';m.tier=MOUSE_TIERS[m.id]||'value';});
+
+const MP=[
+{id:'wallhack-sp005',name:'WALLHACK SP-005',brand:'WALLHACK',material:'Cristal',speed:'Muy rápido',speedValue:5,control:'Bajo',size:'Grande (según edición)',tier:'premium',accent:'#e8e6df',desc:'Glasspad prémium muy conocido en la escena de superficies de cristal. Deslizamiento muy rápido y superficie rígida; necesita acostumbrarse.',url:'https://wallhack.com/'},
+{id:'pulsar-superglide3',name:'Pulsar Superglide3',brand:'Pulsar',material:'Cristal',speed:'Muy rápido',speedValue:5,control:'Bajo',size:'XL (según edición)',tier:'premium',accent:'#b9c8d9',desc:'Cristal templado de gama alta con deslizamiento muy rápido. Buena opción si buscas una superficie rígida y constante.',url:'https://www.pulsar.gg/'},
+{id:'razer-atlas-pro',name:'Razer Atlas',brand:'Razer',material:'Cristal',speed:'Muy rápido',speedValue:5,control:'Bajo',size:'500 × 400 mm',tier:'premium',accent:'#53d78a',desc:'Glasspad prémium de Razer con cristal templado y superficie muy lisa. Es rápido, pero ofrece menos frenado que una tela de control.',url:'https://www.razer.com/pc/gaming-mouse-mats/razer-atlas-pro'},
+{id:'attack-shark-cm05',name:'ATTACK SHARK CM05',brand:'ATTACK SHARK',material:'Cristal',speed:'Rápido',speedValue:4,control:'Medio-bajo',size:'Consultar versión',tier:'budget',accent:'#ff6b91',desc:'Alternativa de cristal más asequible para probar este tipo de superficie. Revisa tamaño, bordes y accesorios incluidos en la versión concreta.',url:'https://attackshark.com/'},
+{id:'spacepad-gp004',name:'XVX SpacePad (GP-004)',brand:'XVX',material:'Cristal',speed:'Rápido',speedValue:4,control:'Medio-bajo',size:'Consultar versión',tier:'budget',accent:'#79b7ff',desc:'Glasspad de precio más contenido con distintos diseños. Interesante como entrada al cristal; comprueba la versión y el tamaño antes de comprar.',url:'https://www.xvxchannel.com/'},
+
+{id:'artisan-zero',name:'ARTISAN Ninja FX Zero',brand:'ARTISAN',material:'Tela',speed:'Equilibrado',speedValue:3,control:'Medio-alto',size:'Varias tallas',tier:'premium',accent:'#d3d6dc',desc:'Uno de los mousepads más conocidos en competitivo. Equilibrio con tendencia al control: desliza bien y permite frenar con confianza.',url:'https://www.artisan-jp.com/zero_eng.html'},
+{id:'artisan-type99',name:'ARTISAN Type-99',brand:'ARTISAN',material:'Tela',speed:'Control',speedValue:1,control:'Muy alto',size:'Varias tallas',tier:'premium',accent:'#c5b9aa',desc:'Superficie lenta y enfocada al control. Puede encajar con sensibilidad baja o con quien quiere que el ratón se frene con facilidad.',url:'https://www.artisan-jp.com/'},
+{id:'artisan-hien',name:'ARTISAN Hien',brand:'ARTISAN',material:'Híbrido',speed:'Rápido',speedValue:4,control:'Medio',size:'Varias tallas',tier:'premium',accent:'#bd8c72',desc:'Superficie híbrida texturizada y rápida, con más carácter que una tela lisa. Buena para quien busca deslizamiento sin ir directamente al cristal.',url:'https://www.artisan-jp.com/hien_eng.html'},
+{id:'artisan-hayate-otsu',name:'ARTISAN Hayate Otsu',brand:'ARTISAN',material:'Híbrido',speed:'Rápido',speedValue:4,control:'Medio',size:'Varias tallas',tier:'premium',accent:'#9b8bc9',desc:'Equilibrio tirando a rápido, con textura marcada y buen deslizamiento. Una opción versátil para movimientos ágiles.',url:'https://www.artisan-jp.com/'},
+{id:'artisan-raiden',name:'ARTISAN Raiden',brand:'ARTISAN',material:'Tela',speed:'Muy rápido',speedValue:5,control:'Bajo',size:'Varias tallas',tier:'premium',accent:'#d2a76e',desc:'De las superficies textiles más rápidas de Artisan. Pensada para quien prioriza deslizar con muy poca resistencia.',url:'https://www.artisan-jp.com/raiden_eng.html'},
+{id:'lgg-saturn-pro',name:'Lethal Gaming Gear Saturn Pro',brand:'Lethal Gaming Gear',material:'Tela',speed:'Equilibrado',speedValue:3,control:'Alto',size:'XL / XXL (según versión)',tier:'premium',accent:'#c65b65',desc:'Superficie de control equilibrado muy popular entre jugadores de FPS. Buena capacidad de frenado sin sentirse excesivamente lenta.',url:'https://lethalgaminggear.com/'},
+{id:'razer-gigantus-v2',name:'Razer Gigantus V2',brand:'Razer',material:'Tela',speed:'Equilibrado',speedValue:3,control:'Medio',size:'Varias tallas',tier:'budget',accent:'#4fbd78',desc:'Alfombrilla textil conocida y fácil de encontrar. Una opción equilibrada para empezar sin gastar demasiado.',url:'https://www.razer.com/gaming-mouse-mats/razer-gigantus-v2'},
+{id:'steelseries-qck',name:'SteelSeries QcK',brand:'SteelSeries',material:'Tela',speed:'Control',speedValue:2,control:'Alto',size:'Varias tallas',tier:'budget',accent:'#aeb9c8',desc:'Clásica de tela con sensación de control y muchas opciones de tamaño. Una elección sencilla para uso diario y gaming.',url:'https://steelseries.com/gaming-mousepads/qck-series'},
+{id:'zowie-gsr3',name:'ZOWIE G-SR III',brand:'ZOWIE',material:'Tela',speed:'Control',speedValue:1,control:'Muy alto',size:'Grande',tier:'premium',accent:'#d5d8df',desc:'Superficie de control pensada para movimientos precisos y frenado marcado. Interesante si no quieres que el ratón se deslice demasiado.',url:'https://zowie.benq.com/'},
+{id:'zowie-gsrse2',name:'ZOWIE G-SR-SE II',brand:'ZOWIE',material:'Tela',speed:'Equilibrado',speedValue:3,control:'Medio',size:'Grande',tier:'premium',accent:'#8bb8d8',desc:'Una opción equilibrada de la familia G-SR-SE, con una sensación menos lenta que los pads de control más marcado.',url:'https://zowie.benq.com/'},
+{id:'logitech-g640',name:'Logitech G640',brand:'Logitech G',material:'Tela',speed:'Equilibrado',speedValue:3,control:'Medio',size:'Grande',tier:'budget',accent:'#d6d9e0',desc:'Superficie textil de fricción moderada, conocida y sencilla. Buena como punto de partida para distintos estilos.',url:'https://www.logitechg.com/es-es/products/gaming-mouse-pads.html'},
+{id:'xraypad-aqua-control2',name:'X-raypad Aqua Control II',brand:'X-raypad',material:'Híbrido',speed:'Rápido',speedValue:4,control:'Medio',size:'Varias tallas',tier:'value',accent:'#61b6bd',desc:'Superficie híbrida con textura y deslizamiento rápido. Ofrece una alternativa a las telas lisas y a los pads de cristal.',url:'https://shop.x-raypad.com/'},
+{id:'razer-strider',name:'Razer Strider',brand:'Razer',material:'Híbrido',speed:'Rápido',speedValue:4,control:'Medio-bajo',size:'Varias tallas',tier:'value',accent:'#78c68e',desc:'Alfombrilla híbrida con superficie rápida y base antideslizante. Para quien quiere deslizar más que con una tela de control.',url:'https://www.razer.com/gaming-mouse-mats/razer-strider'},
+{id:'pulsar-paraspeed',name:'Pulsar ParaSpeed V2',brand:'Pulsar',material:'Híbrido',speed:'Rápido',speedValue:4,control:'Medio-bajo',size:'XL / XXL (según versión)',tier:'value',accent:'#8b9fb8',desc:'Superficie orientada a la velocidad, con menos resistencia que una alfombrilla clásica de control.',url:'https://www.pulsar.gg/'},
+{id:'steelseries-qck-heavy',name:'SteelSeries QcK Heavy',brand:'SteelSeries',material:'Tela',speed:'Control',speedValue:2,control:'Alto',size:'Varias tallas',tier:'value',accent:'#929aa6',desc:'Versión gruesa de la QcK con base más acolchada. Puede aportar una sensación de apoyo y frenado marcada.',url:'https://steelseries.com/gaming-mousepads/qck-series'}
+];
+
+
+// Fotografías reales de producto (CDN de fabricantes o tiendas que muestran el modelo exacto).
+const MOUSEPAD_IMAGES={
+ 'wallhack-sp005':'https://wallhack.com/cdn/shop/files/2048x2048_WEB_PRODUCT-IMG-SP-005-white-GlassPad_01.png?v=1762955930&width=1600',
+ 'pulsar-superglide3':'https://eu.pulsar.gg/cdn/shop/files/Pulsar-Gaming-Gears-Superglide3-Glass-mousepad_L_black_top.png?v=1765992321',
+ 'razer-atlas-pro':'https://files.pccasegear.com/UserFiles/RZ02-04890100-prod1.jpg',
+ 'attack-shark-cm05':'https://pbs.twimg.com/media/Gmzfl1laMAABJgE.jpg',
+ 'spacepad-gp004':'https://www.xvxchannel.com/cdn/shop/files/6_a3a08995-c34b-4122-8fa8-894146bd7e52_2048x.png?v=1745569291',
+ 'artisan-zero':'https://inputgear.de/cdn/shop/files/artisan-mousepad-fx-zero-soft-black-9859608_2048x.jpg?v=1782077480',
+ 'artisan-type99':'https://jpgamingusa.com/cdn/shop/files/TYPE-99_1.png?v=1734500702',
+ 'artisan-hien':'https://specs.gg/assets/img/gear/mousepad/Artisan%20Ninja%20FX%20Hien.png',
+ 'artisan-hayate-otsu':'https://specs.gg/assets/img/gear/mousepad/Artisan%20Hayate%20Otsu.png',
+ 'artisan-raiden':'https://artisan-jp.com/global/media/catalog/product/cache/f76918e6d62e23259d0431dc46b7bf86/r/d/rdc-c-top.jpg',
+ 'lgg-saturn-pro':'https://ausmodshop.com/cdn/shop/files/LGG-XL-SQ-B.jpg?v=1690694107&width=1370',
+ 'razer-gigantus-v2':'https://specs.gg/assets/img/gear/mousepad/Razer%20Gigantus%20V2.png',
+ 'steelseries-qck':'https://fragstore.com/images/detailed/163/0_240_3245043f1cb17b90f8e152808da8b90d.jpeg',
+ 'zowie-gsr3':'https://www.maxgaming.com/bilder/artiklar/zoom/33088_1.jpg?m=1731413333',
+ 'zowie-gsrse2':'https://y.zdmimg.com/202505/20/682c88943ca061557.png_a640.jpg',
+ 'logitech-g640':'https://www.maxgaming.gg/bilder/artiklar/zoom/22611_3.jpg?m=1665395526',
+ 'xraypad-aqua-control2':'https://www.maxgaming.com/bilder/artiklar/19739.jpg?m=1739546976',
+ 'razer-strider':'https://m.media-amazon.com/images/I/81ii5zPbjnL._AC_UF894%2C1000_QL80_.jpg',
+ 'pulsar-paraspeed':'https://level-up.gg/cdn/shop/files/3d74af37eda5f8f6b9ec8381b2cb30cb.jpg?crop=center&height=1200&v=1757350147&width=1200',
+ 'steelseries-qck-heavy':'https://img.yenieera22.com/cdn/1000/ssmp63008-steelseries-qck-heavy-large-gaming-mouse-pad_clipped_rev_1-e7b22b.png'
+};
+function mousepadPhoto(p){
+ const src=MOUSEPAD_IMAGES[p.id];
+ return `<div class="mp-photo-wrap"><img class="mp-product-photo" src="${src||''}" alt="Fotografía original del ${p.name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('.mp-photo-wrap').classList.add('mp-image-error');this.remove()"><span class="mp-photo-fallback">${p.name}</span></div>`;
+}
+
+function mousepadCard(p){return `<article class="card"><div class="card-img">${mousepadPhoto(p)}</div><div class="card-body"><div class="brand">${p.material.toUpperCase()} · ${p.tier==='premium'?'PRÉMIUM':p.tier==='budget'?'ECONÓMICO':'CALIDAD-PRECIO'}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="tags"><span>${p.speed}</span><span>Control: ${p.control}</span><span>${p.size}</span></div><div class="card-actions"><a class="btn secondary" href="${p.url}" target="_blank" rel="noopener">VER MARCA ↗</a><button class="btn outline" onclick="pickMousepadCompare('${p.id}')">COMPARAR</button></div></div></article>`}
+function renderMousepads(){
+ const q=(document.getElementById('mpSearch')?.value||'').toLowerCase(),mat=document.getElementById('mpMaterial')?.value||'all',sp=document.getElementById('mpSpeed')?.value||'all',bud=document.getElementById('mpBudget')?.value||'all';
+ const arr=MP.filter(p=>(p.name+' '+p.brand+' '+p.material+' '+p.speed).toLowerCase().includes(q)&&(mat==='all'||p.material===mat)&&(sp==='all'||p.speed===sp)&&(bud==='all'||(bud==='budget'?p.tier==='budget':bud==='value'?p.tier==='value':p.tier==='premium')));
+ document.getElementById('mpCounter').textContent=`${arr.length} mousepads mostrados · ${MP.length} en el catálogo (5 glasspads y 15 de tela / híbridos)`;
+ document.getElementById('mousepadCards').innerHTML=arr.map(mousepadCard).join('')||'<p class="note">No se encontraron mousepads con esos filtros.</p>';
+}
+['mpSearch','mpMaterial','mpSpeed','mpBudget'].forEach(id=>{document.getElementById(id).addEventListener('input',renderMousepads);document.getElementById(id).addEventListener('change',renderMousepads);});
+
 function mouseArt(m){
  const id='mg'+m.id;
  return `<div class="mouse-art"><svg viewBox="0 0 300 165" role="img" aria-label="Ilustración de ratón gaming ${m.name}"><defs><linearGradient id="${id}" x1="0" x2="1" y1="0" y2="1"><stop stop-color="${m.accent}"/><stop offset="1" stop-color="#273449"/></linearGradient></defs><ellipse cx="150" cy="139" rx="74" ry="12" fill="#000" opacity=".35"/><path d="M150 17 C103 17 77 47 77 91 V105 C77 135 105 151 150 151 C195 151 223 135 223 105 V91 C223 47 197 17 150 17Z" fill="url(#${id})" stroke="#d5deea" stroke-opacity=".72" stroke-width="2.5"/><path d="M150 19 V76" stroke="#0b111b" stroke-width="2" opacity=".8"/><path d="M150 19 V76" stroke="#dbe5f2" stroke-width="1" opacity=".55"/><rect x="143" y="31" width="14" height="27" rx="6" fill="#111a27" stroke="#8798ae" stroke-width="1.5"/><path d="M150 77 V121" stroke="#111a27" stroke-width="2" opacity=".6"/><path d="M85 91 Q150 78 215 91" fill="none" stroke="#ffffff" stroke-opacity=".13" stroke-width="2"/><circle cx="150" cy="67" r="3" fill="${m.accent}"/></svg><small>${m.weight} g · ${m.shape}</small></div>`;
@@ -614,31 +716,34 @@ function compareHTML(p){
 function fillCompare(){document.getElementById('compareType').value='pad';fillCompareOptions();}
 function fillCompareOptions(){
  let type=document.getElementById('compareType').value;
- let arr=type==='keyboard'?K:type==='mouse'?M:P;
- let label=type==='keyboard'?'TECLADO':type==='mouse'?'RATÓN':'MANDO';
- let plural=type==='keyboard'?'TECLADOS':type==='mouse'?'RATONES':'MANDOS';
+ let arr=type==='keyboard'?K:type==='mouse'?M:type==='mousepad'?MP:P;
+ let label=type==='keyboard'?'TECLADO':type==='mouse'?'RATÓN':type==='mousepad'?'MOUSEPAD':'MANDO';
+ let plural=type==='keyboard'?'TECLADOS':type==='mouse'?'RATONES':type==='mousepad'?'MOUSEPADS':'MANDOS';
  document.getElementById('compareTitle').textContent=`COMPARADOR DE ${plural}`;
  document.getElementById('compareLabelA').textContent=`${label} A`;
  document.getElementById('compareLabelB').textContent=`${label} B`;
  ['compareA','compareB'].forEach(id=>document.getElementById(id).innerHTML=arr.map(p=>`<option value="${p.id}">${p.name}</option>`).join(''));
- document.getElementById('compareA').value=type==='keyboard'?K[0].id:type==='mouse'?M[0].id:'g78k';
- document.getElementById('compareB').value=type==='keyboard'?K[1].id:type==='mouse'?M[1].id:'g7pro';
+ document.getElementById('compareA').value=type==='keyboard'?K[0].id:type==='mouse'?M[0].id:type==='mousepad'?MP[0].id:'g78k';
+ document.getElementById('compareB').value=type==='keyboard'?K[1].id:type==='mouse'?M[1].id:type==='mousepad'?MP[1].id:'g7pro';
  renderCompare();
 }
 function keyboardCompareHTML(k,includePhoto=true){return `${includePhoto?`<div class="compare-img">${photo(k.img,k.name,"keyboard-photo",keyboardArt(k))}</div>`:""}<div class="compare-row"><b>Marca</b><span>${k.brand}</span></div><div class="compare-row"><b>Formato</b><span>${k.size}</span></div><div class="compare-row"><b>Switch</b><span>${k.switch}</span></div><div class="compare-row"><b>Rapid Trigger</b><span>${k.rapid}</span></div><div class="compare-row"><b>Polling rate anunciado</b><span>${k.polling}</span></div><div class="compare-row"><b>Conexión</b><span>${k.connection}</span></div><div class="compare-row"><b>Gama orientativa</b><span>${k.price}</span></div><p class="reason">${k.desc}</p><a href="${k.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a>`;}
 function mouseCompareHTML(m){return `<div class="compare-img mouse-compare-img">${mousePhoto(m)}</div><div class="compare-row"><b>Marca</b><span>${m.brand}</span></div><div class="compare-row"><b>Peso</b><span>${m.weight} g</span></div><div class="compare-row"><b>Forma</b><span>${m.shape}</span></div><div class="compare-row"><b>Sensor</b><span>${m.sensor}</span></div><div class="compare-row"><b>Polling rate anunciado</b><span>${m.polling}</span></div><div class="compare-row"><b>Conexión</b><span>${m.connection}</span></div><p class="reason">${m.desc}</p><a href="${m.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a>`;}
+function mousepadCompareHTML(p){return `<div class="mp-compare-photo">${mousepadPhoto(p)}</div><div class="compare-row"><b>Marca</b><span>${p.brand}</span></div><div class="compare-row"><b>Material</b><span>${p.material}</span></div><div class="compare-row"><b>Velocidad</b><span>${p.speed}</span></div><div class="compare-row"><b>Control / frenado</b><span>${p.control}</span></div><div class="compare-row"><b>Tamaño</b><span>${p.size}</span></div><div class="compare-row"><b>Gama</b><span>${p.tier==='premium'?'Prémium':p.tier==='budget'?'Económico':'Calidad-precio'}</span></div><p class="reason">${p.desc}</p><a href="${p.url}" target="_blank" rel="noopener">CONSULTAR MARCA ↗</a>`;}
 function renderCompare(){
  let type=document.getElementById('compareType').value,aId=document.getElementById('compareA').value,bId=document.getElementById('compareB').value;
  if(type==='keyboard'){let a=K.find(p=>p.id===aId),b=K.find(p=>p.id===bId);if(a&&b){document.getElementById('detailA').innerHTML=keyboardCompareHTML(a);document.getElementById('detailB').innerHTML=keyboardCompareHTML(b);}}
  else if(type==='mouse'){let a=M.find(p=>p.id===aId),b=M.find(p=>p.id===bId);if(a&&b){document.getElementById('detailA').innerHTML=mouseCompareHTML(a);document.getElementById('detailB').innerHTML=mouseCompareHTML(b);}}
+ else if(type==='mousepad'){let a=MP.find(p=>p.id===aId),b=MP.find(p=>p.id===bId);if(a&&b){document.getElementById('detailA').innerHTML=mousepadCompareHTML(a);document.getElementById('detailB').innerHTML=mousepadCompareHTML(b);}}
  else{let a=P.find(p=>p.id===aId),b=P.find(p=>p.id===bId);if(a&&b){document.getElementById('detailA').innerHTML=compareHTML(a);document.getElementById('detailB').innerHTML=compareHTML(b);}}
 }
 function pickCompare(id){document.getElementById('compareType').value='pad';fillCompareOptions();document.getElementById('compareA').value=id;go('compare');renderCompare();}
 function pickKeyboardCompare(id){document.getElementById('compareType').value='keyboard';fillCompareOptions();document.getElementById('compareA').value=id;go('compare');renderCompare();}
 function pickMouseCompare(id){document.getElementById('compareType').value='mouse';fillCompareOptions();document.getElementById('compareA').value=id;go('compare');renderCompare();}
+function pickMousepadCompare(id){document.getElementById('compareType').value='mousepad';fillCompareOptions();document.getElementById('compareA').value=id;go('compare');renderCompare();}
 document.getElementById('compareType').onchange=fillCompareOptions;document.getElementById('compareA').onchange=renderCompare;document.getElementById('compareB').onchange=renderCompare;
 
-const DEVICEQ={key:'device',title:'¿Qué equipo quieres recomendar?',desc:'Puedes buscar un mando o un conjunto completo de teclado y ratón.',opts:[['pad','🎮','Mando','Quiero encontrar el mando ideal.'],['combo','⌨️🖱️','Teclado y ratón','Quiero que me recomiendes un pack de ambos.']]};
+const DEVICEQ={key:'device',title:'¿Qué quieres que te recomiende?',desc:'Elige el tipo de equipo para adaptar las preguntas.',opts:[['pad','🎮','Mando','Quiero encontrar el mando ideal.'],['combo','⌨️🖱️','Teclado y ratón','Quiero que me recomiendes un pack de ambos.'],['mousepad','🖱️','Mousepad','Quiero una alfombrilla adecuada a mi sensibilidad y ratón.']]};
 const KQ=[
 {key:'kbudget',title:'¿Qué presupuesto tienes?',desc:'Elige la gama que encaja con lo que quieres gastar.',opts:[['budget','💶','Económico','Busco gastar lo mínimo.'],['value','💳','Calidad-precio','Quiero equilibrio.'],['premium','💎','Prémium','Busco funciones avanzadas.']]},
 {key:'ksize',title:'¿Qué tamaño prefieres?',desc:'El formato cambia el espacio que ocupa y las teclas disponibles.',opts:[['compact','60% / 65%','Compacto','Más espacio para el ratón.'],['75','75%','75%','Compacto, con teclas de función.'],['tkl','TKL','TKL / 80%','Sin teclado numérico.'],['full','100% / 96%','Completo','Quiero teclado numérico.']]},
@@ -654,7 +759,16 @@ const MQ=[
 {key:'mconnection',title:'¿Qué conexión quieres?',desc:'Los modelos inalámbricos actuales también están pensados para jugar competitivo.',opts:[['wireless','📡','Inalámbrico','Quiero un escritorio limpio.'],['wired','🔌','Con cable','Prefiero no cargar batería.'],['any','🔀','Me da igual','La que mejor encaje.']]},
 {key:'mhand',title:'¿Qué tamaño de ratón sueles preferir?',desc:'Si no lo sabes, elige la opción intermedia.',opts:[['small','🤏','Pequeño / compacto','Me gustan los ratones cortos.'],['medium','👌','Mediano','Busco un tamaño equilibrado.'],['large','✋','Grande','Prefiero que llene más la mano.'],['any','🔀','No lo sé','Que el test lo valore.']]}
 ];
-function questionList(){return ans.device==='combo'?[...KQ,...MQ]:Q;}
+const MPQ=[
+{key:'mpsens',title:'¿Qué sensibilidad sueles usar en tus juegos?',desc:'Piensa en tu sensibilidad habitual, sin importar si juegas a Fortnite, Valorant, CS2, Apex u otro juego. Si cambias mucho entre juegos, puedes elegir que no lo sabes.',opts:[['high','⚡','Alta','Con poco movimiento del ratón giro bastante.'],['medium','⚖️','Media','Uso una sensibilidad intermedia.'],['low','🎯','Baja','Necesito mover bastante el ratón para girar.'],['unknown','❔','No lo sé / depende del juego','Mi sensibilidad cambia según el juego.']]},
+{key:'mpdpi',title:'¿Qué DPI utilizas en el ratón?',desc:'El DPI indica cuánto se mueve el cursor según el movimiento físico del ratón. Si no sabes dónde mirarlo, elige “No lo sé”.',opts:[['400','🎯','400 DPI','Uso 400 DPI.'],['800','⚖️','800 DPI','Uso 800 DPI.'],['1600','⚡','1600 DPI o más','Uso 1600 DPI o un valor superior.'],['unknown','❔','No lo sé','No conozco el DPI que tengo configurado.']]},
+{key:'mpfeel',title:'¿Qué sensación quieres al mover el ratón?',desc:'Esto ayuda a elegir entre una superficie de control y una rápida.',opts:[['control','🛑','Más control y frenado','Quiero que el ratón no se deslice demasiado.'],['balanced','⚖️','Equilibrada','Quiero deslizar y frenar sin extremos.'],['speed','🚀','Muy rápida','Quiero que se deslice con facilidad.']]},
+{key:'mpmove',title:'¿Cómo mueves el ratón normalmente?',desc:'Piensa en tus movimientos durante los combates y las construcciones.',opts:[['small','🤏','Movimientos cortos y rápidos','Muevo sobre todo muñeca y dedos.'],['wide','↔️','Movimientos amplios','Uso bastante el brazo y recorro mucho espacio.'],['mixed','🔀','Un poco de todo','Combino movimientos cortos y amplios.']]},
+{key:'mpweight',title:'¿Qué peso tiene tu ratón?',desc:'El peso y los patines cambian la sensación sobre la superficie.',opts:[['light','🪶','Ligero (menos de 60 g)','Mi ratón pesa menos de 60 gramos.'],['heavy','⚖️','Pesado (60 g o más)','Mi ratón pesa 60 gramos o más.'],['unknown','❔','No lo sé','No conozco el peso exacto.']]},
+{key:'mpbudget',title:'¿Qué presupuesto tienes para el mousepad?',desc:'La gama es orientativa; los precios cambian según tamaño y tienda.',opts:[['budget','💶','Económico','Quiero gastar lo mínimo razonable.'],['value','💳','Calidad-precio','Busco una buena superficie sin ir a lo más caro.'],['premium','💎','Prémium','Puedo valorar modelos de gama alta.']]},
+{key:'mpglass',title:'¿Te interesa probar un glasspad?',desc:'El cristal suele ser muy rápido y rígido. No es necesariamente mejor para todos.',opts:[['yes','✨','Sí, quiero cristal','Me atrae una superficie muy rápida.'],['no','🧵','Prefiero tela o híbrido','Quiero una superficie más tradicional.'],['either','🔀','Me da igual','Que el test decida según mis respuestas.']]}
+];
+function questionList(){if(ans.device==='combo')return [...KQ,...MQ];if(ans.device==='mousepad')return MPQ;return Q;}
 
 const Q=[
 {key:"platform",title:"¿Dónde juegas?",desc:"Elige tu plataforma principal.",opts:[["PC","🖥️","PC","Juego en ordenador."],["Xbox","🟩","Xbox","Juego en Xbox."],["PS5","🔵","PlayStation 5","Juego en PS5."],["PS4","🔵","PlayStation 4","Juego en PS4."],["Switch","🔴","Nintendo Switch","Juego en Switch."]]},
@@ -764,8 +878,39 @@ function combinedResults(){
  document.getElementById('alternatives').innerHTML=pairs.slice(1,6).map(x=>`<article class="result-card"><div class="brand">PACK ALTERNATIVO · ${x.s}%</div><h3>${x.k.name} + ${x.m.name}</h3><div class="combo-result-grid"><section><div class="result-photo keyboard-result-art">${photo(x.k.img,x.k.name,"keyboard-photo",keyboardArt(x.k))}</div><small>TECLADO</small><p>${x.k.desc}</p><a href="${x.k.url}" target="_blank" rel="noopener">VER TECLADO ↗</a></section><section><div class="result-photo">${mousePhoto(x.m)}</div><small>RATÓN · ${x.m.weight} g</small><p>${x.m.desc}</p><a href="${x.m.url}" target="_blank" rel="noopener">VER RATÓN ↗</a></section></div></article>`).join('');
 }
 
+function mousepadScore(p){
+ let score=40;
+ const sens=ans.mpsens,feel=ans.mpfeel;
+ if(feel==='control')score+=p.speedValue<=2?25:p.speedValue===3?15:3;
+ else if(feel==='balanced')score+=p.speedValue===3?25:(p.speedValue===2||p.speedValue===4)?16:5;
+ else if(feel==='speed')score+=p.speedValue>=4?25:p.speedValue===3?14:3;
+ else score+=10;
+ if(sens==='high')score+=p.speedValue<=3?12:4;
+ if(sens==='low')score+=p.speedValue>=3?12:5;
+ if(sens==='medium')score+=p.speedValue===3?10:6;
+ if(ans.mpmove==='small')score+=p.speedValue<=3?7:3;
+ if(ans.mpmove==='wide')score+=p.speedValue>=3?7:4;
+ if(ans.mpweight==='light')score+=p.speedValue>=3?5:4;
+ if(ans.mpweight==='heavy')score+=p.speedValue<=3?6:4;
+ if(ans.mpbudget==='budget')score+=p.tier==='budget'?12:p.tier==='value'?9:2;
+ if(ans.mpbudget==='value')score+=p.tier==='value'?12:p.tier==='budget'?9:6;
+ if(ans.mpbudget==='premium')score+=p.tier==='premium'?12:5;
+ if(ans.mpglass==='yes')score+=p.material==='Cristal'?14:0;
+ if(ans.mpglass==='no')score+=p.material==='Cristal'?0:10;
+ if(ans.mpglass==='either')score+=5;
+ return Math.min(99,Math.round(score/1.18));
+}
+function mousepadResults(){
+ const ranked=MP.map(p=>({p,s:mousepadScore(p)})).sort((a,b)=>b.s-a.s);
+ const best=ranked[0];
+ document.getElementById('quizArea').style.display='none';document.getElementById('results').style.display='block';
+ document.getElementById('resultIntro').textContent=`Tu mejor coincidencia es ${best.p.name}. El test ha tenido en cuenta tu sensibilidad, el tipo de movimiento, el peso del ratón y tu preferencia de superficie. La puntuación es una orientación, no una garantía de mejor puntería.`;
+ document.getElementById('bestResult').innerHTML=`<article class="result-card best"><div class="brand">MOUSEPAD RECOMENDADO · ${best.s}% DE COINCIDENCIA</div><h3>${best.p.name}</h3>${mousepadPhoto(best.p)}<div class="score">${best.s}%</div><div class="meter"><div style="width:${best.s}%"></div></div><p class="reason">${best.p.desc}</p><div class="tags"><span>${best.p.material}</span><span>${best.p.speed}</span><span>Control: ${best.p.control}</span></div><a href="${best.p.url}" target="_blank" rel="noopener">CONSULTAR MARCA ↗</a><button class="btn outline" onclick="pickMousepadCompare('${best.p.id}')">COMPARAR</button></article>`;
+ document.getElementById('alternatives').innerHTML=ranked.slice(1,6).map(x=>`<article class="result-card"><div class="brand">${x.s}% DE COINCIDENCIA</div><h3>${x.p.name}</h3>${mousepadPhoto(x.p)}<p class="reason">${x.p.desc}</p><div class="tags"><span>${x.p.material}</span><span>${x.p.speed}</span></div><a href="${x.p.url}" target="_blank" rel="noopener">VER MARCA ↗</a></article>`).join('');
+}
 function results(){
  if(ans.device==='combo'){combinedResults();return;}
+ if(ans.device==='mousepad'){mousepadResults();return;}
  if(ans.device==='keyboard'){ 
   let ranked=K.map(p=>({p,s:keyboardScore(p)})).sort((a,b)=>b.s-a.s);
   document.getElementById('quizArea').style.display='none';document.getElementById('results').style.display='block';
@@ -793,6 +938,7 @@ fillCompare();
 drawQ();
 
 renderMice();
+renderMousepads();
 </script>
 </body>
 </html>
