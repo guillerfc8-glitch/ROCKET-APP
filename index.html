@@ -177,6 +177,13 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
 .detail-kicker{font-size:10px;letter-spacing:2px;color:var(--red);font-weight:900}.detail-title{font:900 clamp(30px,5vw,48px)/.98 'Barlow Condensed';margin:10px 0}.detail-description{font-size:12px;color:#c4cedb;line-height:1.8}.detail-specs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}.detail-spec{background:#ffffff08;border:1px solid var(--line);border-radius:8px;padding:12px}.detail-spec b{display:block;color:#91a0b5;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}.detail-spec span{font-size:11px;line-height:1.5}.detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
 @media(max-width:650px){.detail-top{grid-template-columns:1fr}.detail-visual{height:220px}.detail-content{padding:18px}.detail-specs{grid-template-columns:1fr 1fr}}
 
+
+/* Favoritos: estilos añadidos */
+.favorite-toggle{background:#f43b4d18;border:1px solid #f43b4d88;color:#ff9ba4}
+.favorite-toggle.saved{background:#f43b4d;color:#fff;border-color:#f43b4d}
+.favorite-remove{background:#273244;color:#fff;border:1px solid #3b4a60}
+.favorite-empty{grid-column:1/-1;background:var(--panel);border:1px dashed var(--line);border-radius:13px;padding:35px;text-align:center;color:var(--muted);font-size:12px;line-height:1.8}
+@media(max-width:570px){#favorites .cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -188,6 +195,7 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
    <button data-page="keyboards">TECLADOS</button>
   <button data-page="mice">RATONES</button>
    <button data-page="mousepads">MOUSEPADS</button>
+  <button data-page="favorites">♥ FAVORITOS</button>
   <button data-page="compare">COMPARAR</button>
   <button data-page="test">TEST</button>
   <button data-page="guide">GUÍA</button>
@@ -429,6 +437,18 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
   </div>
  </div>
 </section>
+
+<!-- FAVORITOS -->
+<section class="page" id="favorites">
+ <div class="section">
+  <div class="heading">
+   <div><div class="eyebrow">YOUR SAVED GEAR</div><h2>MIS FAVORITOS</h2></div>
+   <p>Guarda los productos que te interesan y vuelve a su ficha o a la web oficial del fabricante cuando quieras.</p>
+  </div>
+  <div class="counter" id="favoritesCounter">0 productos guardados</div>
+  <div class="cards" id="favoritesCards"></div>
+ </div>
+</section>
 </main>
 
 <footer>
@@ -660,6 +680,74 @@ function renderKeyboardSwitchGuide(){
  host.innerHTML=K.map((k,i)=>`<article class="guide"><div class="number">${String(i+1).padStart(2,'0')}</div><h3>${k.name}</h3><p><strong>Tipo de switch:</strong> ${k.switch}</p><p>${descriptions[k.switch]||'Consulta la ficha del fabricante para confirmar la referencia exacta de los switches de esta versión.'}</p><p><strong>Rapid Trigger:</strong> ${k.rapid}. <strong>Formato:</strong> ${k.size}.</p><a href="${k.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a></article>`).join('');
 }
 
+
+const FAVORITES_STORAGE_KEY='rocketAppFavoritesV1';
+function getFavorites(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(FAVORITES_STORAGE_KEY)||'[]');
+  return Array.isArray(saved)?saved:[];
+ }catch(e){return []}
+}
+function saveFavorites(items){
+ try{localStorage.setItem(FAVORITES_STORAGE_KEY,JSON.stringify(items));}
+ catch(e){console.warn('No se pudieron guardar los favoritos en este navegador.',e);}
+}
+function isFavorite(type,id){
+ return getFavorites().some(x=>x.type===type&&x.id===id);
+}
+function toggleFavorite(type,id){
+ const items=getFavorites();
+ const index=items.findIndex(x=>x.type===type&&x.id===id);
+ if(index>=0)items.splice(index,1);
+ else items.push({type,id});
+ saveFavorites(items);
+ renderFavorites();
+ const button=document.getElementById('detailFavoriteButton');
+ if(button){
+  const saved=isFavorite(type,id);
+  button.classList.toggle('saved',saved);
+  button.textContent=saved?'♥ AÑADIDO A FAVORITOS':'♡ AÑADIR A FAVORITOS';
+ }
+}
+function removeFavorite(type,id){
+ saveFavorites(getFavorites().filter(x=>!(x.type===type&&x.id===id)));
+ renderFavorites();
+}
+function getFavoriteProduct(type,id){
+ const list=type==='keyboard'?K:type==='mouse'?M:type==='mousepad'?MP:P;
+ return list.find(x=>x.id===id);
+}
+function favoriteVisual(type,item){
+ return type==='pad'?controllerPhoto(item.img,item.name):
+  type==='keyboard'?photo(item.img,item.name,'keyboard-photo',keyboardArt(item)):
+  type==='mouse'?mousePhoto(item):mousepadPhoto(item);
+}
+function renderFavorites(){
+ const host=document.getElementById('favoritesCards');
+ if(!host)return;
+ const items=getFavorites();
+ const valid=items.map(x=>({...x,item:getFavoriteProduct(x.type,x.id)})).filter(x=>x.item);
+ document.getElementById('favoritesCounter').textContent=`${valid.length} producto${valid.length===1?'':'s'} guardado${valid.length===1?'':'s'}`;
+ if(!valid.length){
+  host.innerHTML='<div class="favorite-empty">♥<br><strong>TODAVÍA NO TIENES FAVORITOS</strong><br>Abre la ficha de cualquier mando, teclado, ratón o mousepad y pulsa «AÑADIR A FAVORITOS».</div>';
+  return;
+ }
+ host.innerHTML=valid.map(({type,id,item})=>`
+  <article class="card">
+   <div class="card-img">${favoriteVisual(type,item)}</div>
+   <div class="card-body">
+    <div class="brand">${type==='pad'?'MANDO':type==='keyboard'?'TECLADO':type==='mouse'?'RATÓN':'MOUSEPAD'} · ${item.brand}</div>
+    <h3>${item.name}</h3>
+    <p>${item.desc}</p>
+    <div class="card-actions">
+     <button class="btn primary" onclick="showDetails('${type}','${id}')">VER FICHA →</button>
+     <a class="btn secondary" href="${item.url}" target="_blank" rel="noopener">FABRICANTE ↗</a>
+     <button class="btn favorite-remove" onclick="removeFavorite('${type}','${id}')">QUITAR ♥</button>
+    </div>
+   </div>
+  </article>`).join('');
+}
+
 function showDetails(type,id){
  const list=type==='keyboard'?K:type==='mouse'?M:type==='mousepad'?MP:P;
  const item=list.find(x=>x.id===id);if(!item)return;
@@ -678,7 +766,7 @@ function showDetails(type,id){
   specs=[['Marca',item.brand],['Material',item.material],['Velocidad',item.speed],['Control / frenado',item.control],['Tamaño',item.size],['Gama',item.tier==='premium'?'Prémium':item.tier==='budget'?'Económico':'Calidad-precio']];
  }
  const titleType=type==='pad'?'MANDO':type==='keyboard'?'TECLADO':type==='mouse'?'RATÓN':'MOUSEPAD';
- document.getElementById('detailContent').innerHTML=`<div class="detail-top"><div class="detail-visual">${visual}</div><div><div class="detail-kicker">FICHA DEL PRODUCTO · ${titleType}</div><h2 class="detail-title" id="detailTitle">${item.name}</h2><p class="detail-description">${item.desc}</p><div class="detail-actions"><a class="btn primary" href="${item.url}" target="_blank" rel="noopener">WEB DEL FABRICANTE ↗</a><button class="btn secondary" onclick="closeDetails();${type==='pad'?'pickCompare':type==='keyboard'?'pickKeyboardCompare':type==='mouse'?'pickMouseCompare':'pickMousepadCompare'}('${item.id}')">COMPARAR</button></div></div></div><div class="detail-specs">${specs.map(([label,value])=>`<div class="detail-spec"><b>${label}</b><span>${value}</span></div>`).join('')}</div>`;
+ document.getElementById('detailContent').innerHTML=`<div class="detail-top"><div class="detail-visual">${visual}</div><div><div class="detail-kicker">FICHA DEL PRODUCTO · ${titleType}</div><h2 class="detail-title" id="detailTitle">${item.name}</h2><p class="detail-description">${item.desc}</p><div class="detail-actions"><a class="btn primary" href="${item.url}" target="_blank" rel="noopener">WEB DEL FABRICANTE ↗</a><button id="detailFavoriteButton" class="btn favorite-toggle ${isFavorite(type,item.id)?'saved':''}" onclick="toggleFavorite('${type}','${item.id}')">${isFavorite(type,item.id)?'♥ AÑADIDO A FAVORITOS':'♡ AÑADIR A FAVORITOS'}</button><button class="btn secondary" onclick="closeDetails();${type==='pad'?'pickCompare':type==='keyboard'?'pickKeyboardCompare':type==='mouse'?'pickMouseCompare':'pickMousepadCompare'}('${item.id}')">COMPARAR</button></div></div></div><div class="detail-specs">${specs.map(([label,value])=>`<div class="detail-spec"><b>${label}</b><span>${value}</span></div>`).join('')}</div>`;
  const overlay=document.getElementById('detailOverlay');overlay.classList.add('open');document.body.style.overflow='hidden';
 }
 function closeDetails(){document.getElementById('detailOverlay').classList.remove('open');document.body.style.overflow='';}
