@@ -123,6 +123,8 @@ h1 span{color:var(--red)}
 .guide h3{font-size:13px}.guide p{font-size:10px;color:var(--muted);line-height:1.8}
 .note{font-size:10px;line-height:1.7;color:var(--muted);border-top:1px solid var(--line);padding-top:13px;margin-top:17px}
 footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77859a;font-size:9px;line-height:1.8;margin-top:35px}
+
+
 @media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.featured{grid-template-columns:1fr}.quiz-layout{grid-template-columns:1fr}.side{display:none}.result-main{grid-template-columns:1fr}}
 @media(max-width:570px){header{height:auto;display:block;padding:12px 3%}.logo{text-align:center;margin-bottom:10px}.nav{justify-content:center;gap:1px}.nav button{font-size:8px;padding:9px 7px}.cards,.guide-grid,.compare-layout{grid-template-columns:1fr}.options{grid-template-columns:1fr}.heading{display:block}.heading p{margin-top:8px}.hero{padding:52px 0 30px}.featured h2{font-size:40px}}
 @media print{header,footer,.nav,.actions,.result-actions{display:none!important}.page{display:none!important}#test.page{display:block!important}body{background:white;color:#111}}
@@ -162,6 +164,18 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
 .combo-result-grid .result-photo .mouse-photo-wrap{height:190px;min-height:190px}
 .combo-result-grid .result-photo .mouse-product-photo{height:190px;min-height:190px}
 @media(max-width:700px){.combo-result-grid{grid-template-columns:1fr}}
+
+
+/* Ficha de producto */
+.detail-overlay{position:fixed;inset:0;z-index:1000;background:#05070bdc;backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
+.detail-overlay.open{display:flex}
+.detail-modal{width:min(900px,100%);max-height:min(90vh,900px);overflow:auto;background:linear-gradient(145deg,#182333,#0d131d);border:1px solid #3b4a60;border-radius:17px;box-shadow:0 25px 90px #000b;position:relative}
+.detail-close{position:sticky;top:10px;float:right;margin:10px 10px 0 0;width:38px;height:38px;border:1px solid #526176;background:#111a27;color:white;border-radius:9px;font-size:22px;cursor:pointer;z-index:2}
+.detail-content{padding:26px;clear:both}.detail-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:center}
+.detail-visual{height:280px;background:radial-gradient(circle,#2a374a,#0b1018 72%);border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;padding:15px;overflow:hidden}
+.detail-visual img{width:100%;height:100%;object-fit:contain;display:block}.detail-visual .mouse-photo-wrap,.detail-visual .mp-photo-wrap{width:100%;height:100%;display:grid;place-items:center}.detail-visual .mouse-product-photo,.detail-visual .mp-product-photo{max-width:100%;max-height:100%;object-fit:contain}
+.detail-kicker{font-size:10px;letter-spacing:2px;color:var(--red);font-weight:900}.detail-title{font:900 clamp(30px,5vw,48px)/.98 'Barlow Condensed';margin:10px 0}.detail-description{font-size:12px;color:#c4cedb;line-height:1.8}.detail-specs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}.detail-spec{background:#ffffff08;border:1px solid var(--line);border-radius:8px;padding:12px}.detail-spec b{display:block;color:#91a0b5;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}.detail-spec span{font-size:11px;line-height:1.5}.detail-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+@media(max-width:650px){.detail-top{grid-template-columns:1fr}.detail-visual{height:220px}.detail-content{padding:18px}.detail-specs{grid-template-columns:1fr 1fr}}
 
 </style>
 </head>
@@ -323,7 +337,7 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
 <!-- COMPARADOR -->
 <section class="page" id="compare">
  <div class="section">
-  <div class="heading"><div><div class="eyebrow">HEAD TO HEAD</div><h2 id="compareTitle">COMPARADOR DE MANDOS</h2></div><p>Escoge el tipo de producto y compara dos modelos.</p></div>
+  <div class="heading"><div><div class="eyebrow">HEAD TO HEAD</div><h2 id="compareTitle">COMPARADOR DE MANDOS</h2></div><p>Escoge el tipo de producto y compara hasta dos modelos a la vez.</p></div>
   <div class="tools"><select class="filter" id="compareType"><option value="pad">Comparar mandos</option><option value="keyboard">Comparar teclados</option><option value="mouse">Comparar ratones</option><option value="mousepad">Comparar mousepads</option></select></div>
   <div class="compare-layout">
    <div class="compare-box"><h3 id="compareLabelA">MANDO A</h3><select class="filter" id="compareA"></select><div id="detailA"></div></div>
@@ -423,6 +437,10 @@ footer{border-top:1px solid #ffffff13;text-align:center;padding:23px 0;color:#77
  Las fotos se cargan desde sus fuentes originales y pueden cambiar si el servidor externo las modifica. Consulta siempre la ficha del fabricante.
 </footer>
 
+
+<div class="detail-overlay" id="detailOverlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle" onclick="if(event.target===this)closeDetails()">
+ <article class="detail-modal"><button class="detail-close" aria-label="Cerrar ficha" onclick="closeDetails()">×</button><div class="detail-content" id="detailContent"></div></article>
+</div>
 <script>
 const P=[
 {id:"g78k",name:"GameSir G7 Pro 8K PC Black",brand:"GameSir",platform:["PC"],range:"premium",back:4,sticks:"TMR Gen 2",buttons:"Ópticos / mecánicos",triggers:"Hall Effect / micro switch",connection:"USB-C / 2.4 GHz",features:["back","tmr","mechanical","wireless"],price:"Gama prémium",img:"https://www.notebookcheck.com/fileadmin/Notebooks/News/_nc5/gameSir-G7-Pro-8K-PC-Controller-White-and-Black.jpg",url:"https://gamesir.com/",desc:"Versión para PC con TMR de segunda generación, cuatro macros reasignables y polling rate anunciado de hasta 8.000 Hz.",favorite:true},
@@ -597,7 +615,7 @@ function mousepadPhoto(p){
  return `<div class="mp-photo-wrap"><img class="mp-product-photo" src="${src||''}" alt="Fotografía original del ${p.name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('.mp-photo-wrap').classList.add('mp-image-error');this.remove()"><span class="mp-photo-fallback">${p.name}</span></div>`;
 }
 
-function mousepadCard(p){return `<article class="card"><div class="card-img">${mousepadPhoto(p)}</div><div class="card-body"><div class="brand">${p.material.toUpperCase()} · ${p.tier==='premium'?'PRÉMIUM':p.tier==='budget'?'ECONÓMICO':'CALIDAD-PRECIO'}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="tags"><span>${p.speed}</span><span>Control: ${p.control}</span><span>${p.size}</span></div><div class="card-actions"><a class="btn secondary" href="${p.url}" target="_blank" rel="noopener">VER MARCA ↗</a><button class="btn outline" onclick="pickMousepadCompare('${p.id}')">COMPARAR</button></div></div></article>`}
+function mousepadCard(p){return `<article class="card"><div class="card-img">${mousepadPhoto(p)}</div><div class="card-body"><div class="brand">${p.material.toUpperCase()} · ${p.tier==='premium'?'PRÉMIUM':p.tier==='budget'?'ECONÓMICO':'CALIDAD-PRECIO'}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="tags"><span>${p.speed}</span><span>Control: ${p.control}</span><span>${p.size}</span></div><div class="card-actions"><a class="btn secondary" href="${p.url}" target="_blank" rel="noopener">VER MARCA ↗</a><button class="btn secondary" onclick="showDetails('mousepad','${p.id}')">DETALLES</button><button class="btn outline" onclick="pickMousepadCompare('${p.id}')">COMPARAR</button></div></div></article>`}
 function renderMousepads(){
  const q=(document.getElementById('mpSearch')?.value||'').toLowerCase(),mat=document.getElementById('mpMaterial')?.value||'all',sp=document.getElementById('mpSpeed')?.value||'all',bud=document.getElementById('mpBudget')?.value||'all';
  const arr=MP.filter(p=>(p.name+' '+p.brand+' '+p.material+' '+p.speed).toLowerCase().includes(q)&&(mat==='all'||p.material===mat)&&(sp==='all'||p.speed===sp)&&(bud==='all'||(bud==='budget'?p.tier==='budget':bud==='value'?p.tier==='value':p.tier==='premium')));
@@ -611,7 +629,7 @@ function mouseArt(m){
  return `<div class="mouse-art"><svg viewBox="0 0 300 165" role="img" aria-label="Ilustración de ratón gaming ${m.name}"><defs><linearGradient id="${id}" x1="0" x2="1" y1="0" y2="1"><stop stop-color="${m.accent}"/><stop offset="1" stop-color="#273449"/></linearGradient></defs><ellipse cx="150" cy="139" rx="74" ry="12" fill="#000" opacity=".35"/><path d="M150 17 C103 17 77 47 77 91 V105 C77 135 105 151 150 151 C195 151 223 135 223 105 V91 C223 47 197 17 150 17Z" fill="url(#${id})" stroke="#d5deea" stroke-opacity=".72" stroke-width="2.5"/><path d="M150 19 V76" stroke="#0b111b" stroke-width="2" opacity=".8"/><path d="M150 19 V76" stroke="#dbe5f2" stroke-width="1" opacity=".55"/><rect x="143" y="31" width="14" height="27" rx="6" fill="#111a27" stroke="#8798ae" stroke-width="1.5"/><path d="M150 77 V121" stroke="#111a27" stroke-width="2" opacity=".6"/><path d="M85 91 Q150 78 215 91" fill="none" stroke="#ffffff" stroke-opacity=".13" stroke-width="2"/><circle cx="150" cy="67" r="3" fill="${m.accent}"/></svg><small>${m.weight} g · ${m.shape}</small></div>`;
 }
 function mousePhoto(m){return `<div class="mouse-photo-wrap"><img class="mouse-product-photo" src="${m.img}" alt="${m.name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div hidden>${mouseArt(m)}</div></div>`;}
-function mouseCard(m){return `<article class="card"><div class="card-img">${mousePhoto(m)}</div><div class="card-body"><div class="brand">${m.brand.toUpperCase()} · ${m.connection.toUpperCase()}</div><h3>${m.name}</h3><p>${m.desc}</p><div class="tags"><span>${m.weight} g</span><span>${m.shape}</span><span>${m.sensor}</span></div><div class="card-actions"><a class="btn secondary" href="${m.url}" target="_blank" rel="noopener">VER FABRICANTE ↗</a><button class="btn outline" onclick="pickMouseCompare('${m.id}')">COMPARAR</button></div></div></article>`}
+function mouseCard(m){return `<article class="card"><div class="card-img">${mousePhoto(m)}</div><div class="card-body"><div class="brand">${m.brand.toUpperCase()} · ${m.connection.toUpperCase()}</div><h3>${m.name}</h3><p>${m.desc}</p><div class="tags"><span>${m.weight} g</span><span>${m.shape}</span><span>${m.sensor}</span></div><div class="card-actions"><a class="btn secondary" href="${m.url}" target="_blank" rel="noopener">VER FABRICANTE ↗</a><button class="btn secondary" onclick="showDetails('mouse','${m.id}')">DETALLES</button><button class="btn outline" onclick="pickMouseCompare('${m.id}')">COMPARAR</button></div></div></article>`}
 function renderMice(){
  const q=(document.getElementById('mSearch')?.value||'').toLowerCase();
  const b=document.getElementById('mBrand')?.value||'all';
@@ -629,7 +647,7 @@ function keyboardArt(k){
  rows.forEach((n,r)=>{for(let i=0;i<n;i++){let x=30+i*25+(r*5),y=35+r*27;keys+=`<rect x="${x}" y="${y}" width="21" height="20" rx="3" fill="#263447" stroke="#53657c" stroke-width="1"/>`;}});
  return `<div class="kb-illustration"><svg viewBox="0 0 390 180" role="img" aria-label="Ilustración de teclado ${k.name}"><defs><linearGradient id="g${k.id}" x1="0" x2="1"><stop stop-color="${k.accent}"/><stop offset="1" stop-color="#f5f7fb"/></linearGradient></defs><path d="M18 22 Q18 12 30 12 H360 Q372 12 372 24 V151 Q372 164 360 164 H30 Q18 164 18 151Z" fill="#111a27" stroke="url(#g${k.id})" stroke-width="3"/>${keys}<rect x="115" y="144" width="160" height="9" rx="4" fill="${k.accent}" opacity=".8"/><text x="195" y="177" text-anchor="middle" font-size="8" fill="#b7c4d5">${k.size} · ROCKET KEYBOARD LAB</text></svg></div>`;
 }
-function keyboardCard(k){return `<article class="card"><div class="card-img">${photo(k.img,k.name,"keyboard-photo",keyboardArt(k))}</div><div class="card-body"><div class="brand">${k.brand.toUpperCase()}</div><h3>${k.name}</h3><p>${k.desc}</p><div class="tags"><span>${k.size}</span><span>${k.switch}</span><span>${k.rapid==='Sí'?'Rapid Trigger':'Sin Rapid Trigger'}</span></div><div class="card-actions"><button class="btn secondary" onclick="showKeyboard('${k.id}')">DETALLES</button><button class="btn outline" onclick="pickKeyboardCompare('${k.id}')">COMPARAR</button></div></div></article>`}
+function keyboardCard(k){return `<article class="card"><div class="card-img">${photo(k.img,k.name,"keyboard-photo",keyboardArt(k))}</div><div class="card-body"><div class="brand">${k.brand.toUpperCase()}</div><h3>${k.name}</h3><p>${k.desc}</p><div class="tags"><span>${k.size}</span><span>${k.switch}</span><span>${k.rapid==='Sí'?'Rapid Trigger':'Sin Rapid Trigger'}</span></div><div class="card-actions"><button class="btn secondary" onclick="showDetails('keyboard','${k.id}')">DETALLES</button><button class="btn outline" onclick="pickKeyboardCompare('${k.id}')">COMPARAR</button></div></div></article>`}
 function renderKeyboards(){let q=(document.getElementById('kSearch')?.value||'').toLowerCase(),b=document.getElementById('kBrand')?.value||'all',z=document.getElementById('kSize')?.value||'all',sw=document.getElementById('kSwitch')?.value||'all';let a=K.filter(k=>(k.name+' '+k.brand).toLowerCase().includes(q)&&(b==='all'||k.brand===b)&&(z==='all'||k.size===z)&&(sw==='all'||k.switch===sw));document.getElementById('kCounter').textContent=`${a.length} teclados mostrados · ${K.length} en el catálogo`;document.getElementById('keyboardCards').innerHTML=a.map(keyboardCard).join('')||'<p class="note">No se encontraron teclados con esos filtros.</p>';}
 function renderKeyboardSwitchGuide(){
  const host=document.getElementById('keyboardSwitchGuide');
@@ -642,7 +660,30 @@ function renderKeyboardSwitchGuide(){
  host.innerHTML=K.map((k,i)=>`<article class="guide"><div class="number">${String(i+1).padStart(2,'0')}</div><h3>${k.name}</h3><p><strong>Tipo de switch:</strong> ${k.switch}</p><p>${descriptions[k.switch]||'Consulta la ficha del fabricante para confirmar la referencia exacta de los switches de esta versión.'}</p><p><strong>Rapid Trigger:</strong> ${k.rapid}. <strong>Formato:</strong> ${k.size}.</p><a href="${k.url}" target="_blank" rel="noopener">CONSULTAR FABRICANTE ↗</a></article>`).join('');
 }
 
-function showKeyboard(id){let k=K.find(x=>x.id===id);if(!k)return;go('keyboards');document.getElementById('kSearch').value=k.name;document.getElementById('kBrand').value='all';document.getElementById('kSize').value='all';document.getElementById('kSwitch').value='all';renderKeyboards();}
+function showDetails(type,id){
+ const list=type==='keyboard'?K:type==='mouse'?M:type==='mousepad'?MP:P;
+ const item=list.find(x=>x.id===id);if(!item)return;
+ let visual='', specs=[];
+ if(type==='pad'){
+  visual=controllerPhoto(item.img,item.name);
+  specs=[['Marca',item.brand],['Plataformas',item.platform.join(', ')],['Sticks',item.sticks],['Botones',item.buttons],['Controles extra',item.back+' botones/palancas'],['Gatillos',item.triggers],['Conexión',item.connection],['Gama',item.price]];
+ }else if(type==='keyboard'){
+  visual=photo(item.img,item.name,'keyboard-photo',keyboardArt(item));
+  specs=[['Marca',item.brand],['Formato',item.size],['Tipo de switch',item.switch],['Rapid Trigger',item.rapid],['Polling rate',item.polling],['Conexión',item.connection],['Gama',item.price]];
+ }else if(type==='mouse'){
+  visual=mousePhoto(item);
+  specs=[['Marca',item.brand],['Peso',item.weight+' g'],['Conexión',item.connection],['Forma',item.shape],['Sensor',item.sensor],['Polling rate',item.polling]];
+ }else{
+  visual=mousepadPhoto(item);
+  specs=[['Marca',item.brand],['Material',item.material],['Velocidad',item.speed],['Control / frenado',item.control],['Tamaño',item.size],['Gama',item.tier==='premium'?'Prémium':item.tier==='budget'?'Económico':'Calidad-precio']];
+ }
+ const titleType=type==='pad'?'MANDO':type==='keyboard'?'TECLADO':type==='mouse'?'RATÓN':'MOUSEPAD';
+ document.getElementById('detailContent').innerHTML=`<div class="detail-top"><div class="detail-visual">${visual}</div><div><div class="detail-kicker">FICHA DEL PRODUCTO · ${titleType}</div><h2 class="detail-title" id="detailTitle">${item.name}</h2><p class="detail-description">${item.desc}</p><div class="detail-actions"><a class="btn primary" href="${item.url}" target="_blank" rel="noopener">WEB DEL FABRICANTE ↗</a><button class="btn secondary" onclick="closeDetails();${type==='pad'?'pickCompare':type==='keyboard'?'pickKeyboardCompare':type==='mouse'?'pickMouseCompare':'pickMousepadCompare'}('${item.id}')">COMPARAR</button></div></div></div><div class="detail-specs">${specs.map(([label,value])=>`<div class="detail-spec"><b>${label}</b><span>${value}</span></div>`).join('')}</div>`;
+ const overlay=document.getElementById('detailOverlay');overlay.classList.add('open');document.body.style.overflow='hidden';
+}
+function closeDetails(){document.getElementById('detailOverlay').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetails()});
+function showKeyboard(id){showDetails('keyboard',id)}
 ['kSearch','kBrand','kSize','kSwitch'].forEach(id=>document.getElementById(id).addEventListener('input',renderKeyboards));
 
 function go(id){
@@ -676,7 +717,7 @@ function cardHTML(p){
  <div class="brand">${p.brand.toUpperCase()} ${p.favorite?" · FAVORITO":""}</div>
  <h3>${p.name}</h3><p>${p.desc}</p>
  <div class="tags"><span>Sensor: ${p.sticks}</span><span>${p.back} extras</span><span>${p.range==="basic"?"Básico":p.range==="budget"?"Económico":p.range==="value"?"Calidad-precio":"Prémium"}</span></div>
- <div class="card-actions"><button class="btn secondary" onclick="showProduct('${p.id}')">DETALLES</button><button class="btn outline" onclick="pickCompare('${p.id}')">COMPARAR</button></div>
+ <div class="card-actions"><button class="btn secondary" onclick="showDetails('pad','${p.id}')">DETALLES</button><button class="btn outline" onclick="pickCompare('${p.id}')">COMPARAR</button></div>
  </div></article>`;
 }
 function renderCatalog(){
@@ -691,16 +732,7 @@ function renderCatalog(){
 }
 ["search","brand","platform","range","feature"].forEach(id=>document.getElementById(id).addEventListener("input",renderCatalog));
 
-function showProduct(id){
- let p=P.find(x=>x.id===id);if(!p)return;
- go("catalog");
- document.getElementById("search").value=p.name;
- document.getElementById("brand").value="all";
- document.getElementById("platform").value="all";
- document.getElementById("range").value="all";
- document.getElementById("feature").value="all";
- renderCatalog();
-}
+function showProduct(id){showDetails('pad',id);}
 function compareHTML(p){
  return `<div class="compare-img">${controllerPhoto(p.img,p.name)}</div>
  <div class="compare-row"><b>Marca</b><span>${p.brand}</span></div>
