@@ -777,6 +777,8 @@ function showKeyboard(id){showDetails('keyboard',id)}
 function go(id){
  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ // Actualizar la lista cada vez que se abre Favoritos, leyendo lo guardado en localStorage.
+ if(id==='favorites') renderFavorites();
  window.scrollTo({top:0,behavior:"smooth"});
 }
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.page));
@@ -1059,6 +1061,8 @@ drawQ();
 
 renderMice();
 renderMousepads();
+// Cargar los favoritos guardados también al entrar o recargar la web.
+renderFavorites();
 </script>
 </body>
 </html>
